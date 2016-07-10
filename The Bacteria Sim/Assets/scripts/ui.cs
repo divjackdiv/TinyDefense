@@ -129,7 +129,6 @@ public class ui : MonoBehaviour {
             if (type == 0)
             {
                 gO.GetComponent<GeneralAi>().UiManager = gameObject;
-                print("ggg");
             }
             gO.SetActive(active);
             if (active == false)

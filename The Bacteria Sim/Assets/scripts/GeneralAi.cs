@@ -21,12 +21,14 @@ public class GeneralAi : MonoBehaviour
     Vector3 axis = Vector3.forward;
 	Vector2 pos;
     Vector2 direction;
+    Quaternion rotation;
     float t;
     float time;
     int food;
     bool isTumbling;
 	bool foundFood;
 	private GameObject currentFoodTarget;
+    private int m; // TO BE DELETED
     float timeTillNextMovement;
     public Animator animator;
     //FOR NOW ANIMS ARE SET LIKE THIS 
@@ -70,6 +72,7 @@ public class GeneralAi : MonoBehaviour
         oldpos = newpos;
     }
     void setStartingStats() {
+        rotation = transform.rotation;
         food = startingFood;
         time = 0;
         t = 0;
@@ -113,12 +116,26 @@ public class GeneralAi : MonoBehaviour
             else animator.SetInteger("state", 0);
         }
 		//Set Direction if there is no food target
-		if (!foundFood && Vector2.Distance(transform.position, direction) <= 1) {
-			float x, y;
-			x = Random.Range (direction.x - maxPosChange, direction.x + maxPosChange);
-			y = Random.Range (direction.y - maxPosChange, direction.y + maxPosChange);
-			direction = new Vector3 (x, y, 0);
-		}
+		
+        if (!foundFood && Vector2.Distance(transform.position, direction) <= 1) {
+			if(mode ==1 || mode == 2){
+                float x, y;
+    			x = Random.Range (direction.x - maxPosChange, direction.x + maxPosChange);
+    			y = Random.Range (direction.y - maxPosChange, direction.y + maxPosChange);
+    			direction = new Vector3 (x, y, 0);
+            }
+            if (mode == 3){
+                float x, y;
+                x = Random.Range (direction.x - maxPosChange, direction.x + maxPosChange);
+                y = Random.Range (direction.y - maxPosChange, direction.y + maxPosChange);
+                direction = new Vector3 (x, y, 0);
+            }
+        }
+        if(Vector2.Distance(transform.position, direction) > 2 && mode == 2){
+            m = 1;
+        }
+        else if (mode == 2) m = 2;
+
 
 		// Change moving state every random x
 		if( time % timeTillNextMovement <= 0.5){
@@ -147,7 +164,6 @@ public class GeneralAi : MonoBehaviour
 		}
         Vector2 jitteredPos = new Vector2(direction.x + xJitter, direction.y + yJitter);
 
-
         //now Actually move towards pos
 		if (mode == 1){
 			//rotate towards main target
@@ -161,16 +177,34 @@ public class GeneralAi : MonoBehaviour
 			else transform.position = Vector2.MoveTowards(transform.position, direction, Time.deltaTime * speed);
 		}
 		else if (mode == 2) {
-			Vector3 d = new Vector2(direction.x - transform.position.x, direction.y - transform.position.y);
-			float angle = Mathf.Atan2 (d.y, d.x) * Mathf.Rad2Deg;
-			Quaternion q = Quaternion.AngleAxis(angle, Vector2.right);
+            if (m == 1){
+                Vector3 d = new Vector2(direction.x - transform.position.x , direction.y - transform.position.y);
+                float angle = Mathf.Atan2 (d.y, d.x) * Mathf.Rad2Deg;
+                Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * rotationSpeed);
 
-			transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * rotationSpeed);
+                //move towards target with jitter
+                if (isTumbling) transform.position = Vector2.MoveTowards(transform.position, direction, Time.deltaTime * speed *0.5f);
+                else transform.position = Vector2.MoveTowards(transform.position, direction, Time.deltaTime * speed);
+            }
+            else{
+                Vector3 d = new Vector2(direction.x - transform.position.x , direction.y - transform.position.y);
+                float angle = Mathf.Atan2 (d.y, d.x) * Mathf.Rad2Deg;
+                Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * rotationSpeed);
 
-			//move towards target with jitter
-			if (isTumbling) transform.position = Vector2.MoveTowards(transform.position, jitteredPos, Time.deltaTime * speed *0.5f);
-			else transform.position = Vector2.MoveTowards(transform.position, jitteredPos, Time.deltaTime * speed);
+                //move towards target with jitter
+                if (isTumbling) transform.position = Vector2.MoveTowards(transform.position, jitteredPos, Time.deltaTime * speed *0.5f);
+                else transform.position = Vector2.MoveTowards(transform.position, jitteredPos, Time.deltaTime * speed);
+            }
 		}
+        else if (mode == 3){
+            Vector3 d = new Vector2(direction.x - transform.position.x , direction.y - transform.position.y);
+            float angle = Mathf.Atan2 (d.y, d.x) * Mathf.Rad2Deg;
+            Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+            transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * rotationSpeed);
+            transform.Translate(Vector2.right * Time.deltaTime * speed);
+        }
     }
 
 
