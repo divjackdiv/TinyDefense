@@ -11,14 +11,18 @@ public class CameraControl : MonoBehaviour
 	public float upLimit = 20;
 
 	float futureFOV;
-	public float startFOV = 130;
-	public float maxFOV = 20;
+	public float startFOV = 20;
+	public float maxFOV = 30;
 	public float minFOV = 1;
+	private float fov;
 
 	public float zoomSpeed = 2;
 	void Start () 
 	{
-		futureFOV = startFOV;
+		if (startFOV < maxFOV || startFOV > minFOV ) futureFOV = startFOV;
+		else futureFOV = maxFOV;
+		fov = futureFOV;
+		Camera.main.orthographicSize = fov;
 	}
 
 	void Update () 
@@ -26,19 +30,19 @@ public class CameraControl : MonoBehaviour
 //Horizontal et Vertical
 		if(Input.mousePosition.x < Screen.width / 15)
 		{
-			transform.position += Vector3.left / 2;
+			transform.position += (Vector3.left * fov)/60;// 
 		}
 		if(Input.mousePosition.x > (Screen.width * 14) / 15)
 		{
-			transform.position += Vector3.right / 2;
+			transform.position += (Vector3.right* fov)/60;;
 		}
 		if(Input.mousePosition.y < Screen.height / 15)
 		{
-			transform.position += Vector3.down / 2;
+			transform.position += (Vector3.down * fov)/60;;
 		}
 		if(Input.mousePosition.y > (Screen.height * 14) / 15)
 		{
-			transform.position += Vector3.up / 2;
+			transform.position += (Vector3.up * fov)/60;;
 		}
 		tempX = transform.position.x;
 		tempY = transform.position.y;
@@ -49,12 +53,12 @@ public class CameraControl : MonoBehaviour
 //Zoom et Dezoom
 		if(Input.GetAxis("Mouse ScrollWheel") != 0  )
 		{
-			if(Input.GetAxis("Mouse ScrollWheel") > 0  && Camera.main.orthographicSize > minFOV)
+			if(Input.GetAxis("Mouse ScrollWheel") > 0  && fov > minFOV)
 			{
 				Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 				zoomTowards(mousePos, -1);
 			}
-			else if(Input.GetAxis("Mouse ScrollWheel") < 0 && Camera.main.orthographicSize < maxFOV)
+			else if(Input.GetAxis("Mouse ScrollWheel") < 0 && fov < maxFOV)
 			{	
 				Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 				zoomTowards(mousePos, 1);
@@ -63,6 +67,7 @@ public class CameraControl : MonoBehaviour
 	}
 	void zoomTowards(Vector3 pos, int direction){
 		Camera.main.orthographicSize += direction;
+		fov += direction;
 		float multiplier = (1f / Camera.main.orthographicSize);					
 		transform.position += (pos - transform.position) * multiplier;
 		Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, minFOV, maxFOV);

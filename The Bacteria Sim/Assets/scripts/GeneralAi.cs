@@ -5,6 +5,7 @@ public class GeneralAi : MonoBehaviour
 {
 	public int mode =1;
     public GameObject UiManager;
+  //  public float nbOfFrames = 5; // this script is call every x frames, x being this value, this is for optimization 
     public float speed = 0.20f; // Speed the attached gameObject moves at
     public float eatCountdown = 5; //every xtime a game object should eat
     public int startingFood = 3; // How much food the game object starts with
@@ -27,10 +28,12 @@ public class GeneralAi : MonoBehaviour
     int food;
     bool isTumbling;
 	bool foundFood;
+    float localEatCountDown;
 	private GameObject currentFoodTarget;
     private int m; // TO BE DELETED
     float timeTillNextMovement;
     public Animator animator;
+    float frame;
     //FOR NOW ANIMS ARE SET LIKE THIS 
     // 0 : normal move anim
     // 1 : divide anim
@@ -52,15 +55,18 @@ public class GeneralAi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
-        t += Time.deltaTime;
-		pos = transform.position;
-        checkHunger();
-        checkDivide();
-        checkAge(); 
-		detectFood();
-        movementManagment();
-        drawTrail();
+        //frame++;
+        //if (frame % nbOfFrames == 0) {
+            time += Time.deltaTime;
+            t += Time.deltaTime;
+            pos = transform.position;
+            checkHunger();
+            checkDivide();
+            checkAge(); 
+            detectFood();
+            movementManagment();
+            drawTrail();
+       // }
     }
 
     void drawTrail()
@@ -72,6 +78,8 @@ public class GeneralAi : MonoBehaviour
         oldpos = newpos;
     }
     void setStartingStats() {
+        frame = 0;
+        localEatCountDown = eatCountdown;
         rotation = transform.rotation;
         food = startingFood;
         time = 0;
@@ -241,8 +249,7 @@ public class GeneralAi : MonoBehaviour
     }
     void checkHunger()
     {
-        eatCountdown += Time.deltaTime;
-        if (eatCountdown > 5)
+        if (time >= localEatCountDown )
         {
             if (food <= 0)
             {
@@ -250,8 +257,8 @@ public class GeneralAi : MonoBehaviour
             }
             else
             {
-                eatCountdown = 0;
                 food--;
+                localEatCountDown += eatCountdown;
             }
         }
     }
