@@ -12,6 +12,8 @@ public class ui : MonoBehaviour {
 
     //Canvas/ui
     public int currentObject; //default object to create
+    GameObject currentGameObject;
+
     public Canvas canvas;
     private GameObject bottomBar;
 
@@ -32,6 +34,7 @@ public class ui : MonoBehaviour {
     public Dictionary<string, List<GameObject>> objectPool;
     public int maxSize = 10;
     Dictionary<string, int> created;
+
 
     void Start () {
         setupLevel();
@@ -57,10 +60,10 @@ public class ui : MonoBehaviour {
             for (int j = 0; j < maxSize; j++)
             {
                 if (objects[i].tag == "food"){
-                    create(objects[i], defaultPos, false, true, 1);
+                    create(objects[i], defaultPos, false, true);
                 }
                 else{
-                    create(objects[i], defaultPos, false, true, 0);                    
+                    create(objects[i], defaultPos, false, true);                    
                 }
             }
         }
@@ -77,14 +80,14 @@ public class ui : MonoBehaviour {
                 float y = (float)Random.Range(foodSpacing * 7, foodSpacing * 13) / 10;
                 x = foodOrigin.x + (x * (1 + i));
                 y = foodOrigin.y + (y * (1 + j));
-                create(food, new Vector3(x, y, 0), true, true, 1);
+                create(food, new Vector3(x, y, 0), true, true);
             }
         }
     }
 
     void Update()
     {
-		if (Input.GetButton("Fire1")){
+		if (Input.GetButton("Gas")){
 			if (!EventSystem.current.IsPointerOverGameObject ()) {
 				Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 				mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
@@ -96,15 +99,15 @@ public class ui : MonoBehaviour {
 				gas.GetComponent<ParticleSystem>().Stop(true);
 			}
 		}
-		if (Input.GetButtonDown("DragDrop"))
+		/*if (Input.GetButtonDown("DragDrop"))
         {
 			if (!EventSystem.current.IsPointerOverGameObject())
             {
                 Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
                 mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-                create(objects[currentObject], mousePosition, true, false, 0);
+                create(objects[currentObject], mousePosition, true, false);
             }
-        }
+        }*/
         if (Input.GetButtonDown("Fire2"))
         {
             if (!EventSystem.current.IsPointerOverGameObject())
@@ -121,12 +124,11 @@ public class ui : MonoBehaviour {
     }
 
     //returns true if something is created/ or an object is reinstated through object pooling, false otherwise
-    //Type is the type of thing created, 0 being bacterias, 1 being food
-    public bool create(GameObject g, Vector2 pos, bool active, bool isPopulating, int type)
+    public GameObject create(GameObject g, Vector2 pos, bool active, bool isPopulating)
     {
         if (isPopulating) {
             GameObject gO = (GameObject)Instantiate(g, pos, Quaternion.identity);
-            if (type == 0)
+            if (gO.GetComponent<GeneralAi>() != null)
             {
                 gO.GetComponent<GeneralAi>().UiManager = gameObject;
             }
@@ -135,18 +137,19 @@ public class ui : MonoBehaviour {
             {
                 objectPool[gO.tag].Add(gO);
             }
+            return gO;
         }
-        else if (objectPool[g.tag].Count <= 0) return false;
+        else if (objectPool[g.tag].Count <= 0) return null;
         else
         {
             GameObject pooledObj = objectPool[g.tag][0];
             pooledObj.transform.position = pos;
             pooledObj.transform.rotation = Quaternion.identity;
-            pooledObj.SetActive(true);
+            pooledObj.SetActive(active);
             objectPool[g.tag].RemoveAt(0);
             created[g.tag]++;
+            return pooledObj;
         }
-        return true;
 	}
 
     public void destroy(GameObject g)
@@ -166,10 +169,33 @@ public class ui : MonoBehaviour {
         g.SetActive(false);
         StartCoroutine(WaitAndRespawn(foodRespawnTime,g));
     }
+
     IEnumerator WaitAndRespawn(int respawnTime, GameObject g)
     {
         yield return new WaitForSeconds(respawnTime);
         g.SetActive(true);
+    }
+    public void OnDrag(){ 
+    	print("dragging");
+        Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+		if (currentGameObject == null ){
+			currentGameObject = create(objects[currentObject], mousePosition, true, false);
+			MonoBehaviour[] scripts = currentGameObject.GetComponents<MonoBehaviour>();
+			foreach (MonoBehaviour script in scripts) script.enabled = false;
+		}
+        currentGameObject.transform.position = mousePosition;
+        //Should probably play some wiggling animation
+    }
+    public void OnDrop(){
+    	print("sort of dropping");
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+        	if(currentGameObject != null) destroy(currentGameObject);
+        }
+        MonoBehaviour[] scripts = currentGameObject.GetComponents<MonoBehaviour>();
+		foreach (MonoBehaviour script in scripts) script.enabled = true;
+        currentGameObject = null;
     }
 
     public void changeObject(int i)
@@ -207,7 +233,6 @@ public class ui : MonoBehaviour {
             if (currentObject < 0) currentObject = objects.Count - 1;
         }
     }
-
     public void slowTime()
     {
         if (timeScales >= 16) timeScales = 1;

@@ -225,7 +225,7 @@ public class GeneralAi : MonoBehaviour
             animator.SetInteger("state", 1);
         }
         //now Actually create another cell
-        bool created = UiManager.GetComponent<ui>().create(transform.gameObject, transform.position, true, false, 0);
+        bool created = UiManager.GetComponent<ui>().create(transform.gameObject, transform.position, true, false);
         if (created) t = 0;
     }
 
