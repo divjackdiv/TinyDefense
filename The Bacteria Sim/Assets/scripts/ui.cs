@@ -9,6 +9,7 @@ public class ui : MonoBehaviour {
     //general settings
     int currentSim = 0;
     public int timeScales = 1;
+    public bool isMacro = true;
 
     //Canvas/ui
     public int currentObject; //default object to create
@@ -87,6 +88,7 @@ public class ui : MonoBehaviour {
 
     void Update()
     {
+    	if (!isMacro) return;
 		if (Input.GetButton("Gas")){
 			if (!EventSystem.current.IsPointerOverGameObject ()) {
 				Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
@@ -130,7 +132,7 @@ public class ui : MonoBehaviour {
             GameObject gO = (GameObject)Instantiate(g, pos, Quaternion.identity);
             if (gO.GetComponent<GeneralAi>() != null)
             {
-                gO.GetComponent<GeneralAi>().UiManager = gameObject;
+                gO.GetComponent<GeneralAi>().GameManager = gameObject;
             }
             gO.SetActive(active);
             if (active == false)

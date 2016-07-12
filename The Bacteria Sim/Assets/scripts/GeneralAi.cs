@@ -4,7 +4,7 @@ using System.Collections;
 public class GeneralAi : MonoBehaviour
 {
 	public int mode =1;
-    public GameObject UiManager;
+    public GameObject GameManager;
   //  public float nbOfFrames = 5; // this script is call every x frames, x being this value, this is for optimization 
     public float speed = 0.20f; // Speed the attached gameObject moves at
     public float eatCountdown = 5; //every xtime a game object should eat
@@ -225,7 +225,7 @@ public class GeneralAi : MonoBehaviour
             animator.SetInteger("state", 1);
         }
         //now Actually create another cell
-        bool created = UiManager.GetComponent<ui>().create(transform.gameObject, transform.position, true, false);
+        bool created = GameManager.GetComponent<gameManager>().create(transform.gameObject, transform.position, true, false);
         if (created) t = 0;
     }
 
@@ -239,13 +239,13 @@ public class GeneralAi : MonoBehaviour
         //reset Stats in case the prefabs gets reused
         setStartingStats();
         //now Actually create another cell
-        UiManager.GetComponent<ui>().destroy(transform.gameObject);
+        GameManager.GetComponent<gameManager>().destroy(transform.gameObject);
     }
     void eat(GameObject g)
     {
         food += 1;
 		foundFood = false;
-        UiManager.GetComponent<ui>().destroy(g);
+        GameManager.GetComponent<gameManager>().destroy(g);
     }
     void checkHunger()
     {
