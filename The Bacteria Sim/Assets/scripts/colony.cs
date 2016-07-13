@@ -12,8 +12,10 @@ public class colony : MonoBehaviour {
 	public float maxPosChange = 1;
 	private Vector2 direction;
 	private bool isWaiting;
+	private Vector3 startScale;
 	// Use this for initialization
 	void Start () {
+		startScale = transform.localScale;
 		GetComponent<SpriteRenderer>().color = color;
 		growthSpeed *= 10;
 		direction = randomDirection(maxPosChange);
@@ -52,5 +54,10 @@ public class colony : MonoBehaviour {
     	isWaiting = true;
         yield return new WaitForSeconds(seconds);
         isWaiting = false;
+    }
+
+    void OnParticleCollision(GameObject other) {
+        size = 10;
+        transform.localScale = startScale;
     }
 }

@@ -6,6 +6,7 @@ public class CameraControl : MonoBehaviour
 	float tempX;
 	float tempY;
 	public GameObject gameManager;
+	public GameObject userInput;
 	public bool isMacro = true;
 	public float leftLimit = -20;
 	public float rightLimit = 20;
@@ -68,7 +69,8 @@ public class CameraControl : MonoBehaviour
                 			fov = 8;
                 			gameManager.GetComponent<gameManager>().changeToMicro(hit.collider.gameObject);
                 			currentColony = hit.collider.gameObject;
-							isMacro = false;	
+							isMacro = false;
+							userInput.GetComponent<userInput>().isMacro = isMacro;	
                 		}
                 	}
 					
@@ -85,6 +87,7 @@ public class CameraControl : MonoBehaviour
 					fov = 300;
                 	gameManager.GetComponent<gameManager>().changeToMacro(currentColony);
 					isMacro = true;
+					userInput.GetComponent<userInput>().isMacro = isMacro;
 				}
 				else if((fov < macroMaxFOV && isMacro) || (fov < microMaxFOV && !isMacro) ){
 					Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
