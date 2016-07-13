@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-//For now this UI script + GENERAL script so creates everything, takes care of user control
+
+// User interface script
 public class userInterface : MonoBehaviour {
 
     public Transform canvasButtons;
@@ -13,9 +14,9 @@ public class userInterface : MonoBehaviour {
     GameObject currentGameObject;
     List<GameObject> objects;
 
-    public void Start(){
-        objects =  GameManager.GetComponent<gameManager>().objects;
-        for (int i = 0; i < objects.Count; i++)
+    public void setupUi(){
+        objects =  GameManager.GetComponent<microGameSetup>().objects;
+        for (int i = 0; i < 3 /*objects.Count*/; i++)
         {
             canvasButtons.GetChild(i).GetComponent<Image>().sprite = objects[i].GetComponent<SpriteRenderer>().sprite;
             canvasButtons.GetChild(i).GetComponent<Image>().preserveAspect = true;
@@ -26,7 +27,7 @@ public class userInterface : MonoBehaviour {
         Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
         if (currentGameObject == null ){
-            currentGameObject = GameManager.GetComponent<gameManager>().create(objects[currentObject], mousePosition, true, false);
+            currentGameObject = GameManager.GetComponent<macroGameSetup>().createRandColony(objects[currentObject], mousePosition);
             MonoBehaviour[] scripts = currentGameObject.GetComponents<MonoBehaviour>();
             foreach (MonoBehaviour script in scripts) script.enabled = false;
         }
@@ -37,7 +38,7 @@ public class userInterface : MonoBehaviour {
     public void OnDrop(){
         if (EventSystem.current.IsPointerOverGameObject())
         {
-            if(currentGameObject != null) GameManager.GetComponent<gameManager>().destroy(currentGameObject);
+            if(currentGameObject != null) Destroy(currentGameObject);
         }
         MonoBehaviour[] scripts = currentGameObject.GetComponents<MonoBehaviour>();
         foreach (MonoBehaviour script in scripts) script.enabled = true;
@@ -81,11 +82,11 @@ public class userInterface : MonoBehaviour {
     }    
     public void slowTime()
     {
-        int timeScales = GameManager.GetComponent<gameManager>().timeScales;
+        int timeScales = GameManager.GetComponent<microGameSetup>().timeScales;
         if (timeScales >= 16) timeScales = 1;
         else timeScales *= 2;
         Time.timeScale = timeScales;
-        GameManager.GetComponent<gameManager>().timeScales = timeScales;
+        GameManager.GetComponent<microGameSetup>().timeScales = timeScales;
     }
 
 }

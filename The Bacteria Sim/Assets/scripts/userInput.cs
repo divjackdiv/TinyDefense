@@ -11,12 +11,8 @@ public class userInput : MonoBehaviour {
 
 	//particle system
 	public GameObject gas;
-
-
-
     void Update()
     {
-    	if (!isMacro) return;
 		if (Input.GetButton("Gas")){
 			if (!EventSystem.current.IsPointerOverGameObject ()) {
 				Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
@@ -25,7 +21,7 @@ public class userInput : MonoBehaviour {
 			}
 		} 
 		else {
-			if (gas.GetComponent<ParticleSystem> ().isPlaying) {
+			if (gas.GetComponent<ParticleSystem>().isPlaying) {
 				gas.GetComponent<ParticleSystem>().Stop(true);
 			}
 		}
