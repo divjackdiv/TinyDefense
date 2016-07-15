@@ -11,19 +11,16 @@ public class gameManager : MonoBehaviour {
     public GameObject userInterfaceManager;
     public Vector3 cameraMacroPos;
     public Vector3 cameraMicroPos;
-
-    private Vector2 microBottomLeftPosition;
-    private int microGameX;
-    private int microGameY;
+    public int MaxNumberOfBacterias;
+    float w;
+    float h;
 
     public void Start(){
-        microBottomLeftPosition = GetComponent<microGameSetup>().microBottomLeftPosition;
-        microGameX = GetComponent<microGameSetup>().microGameX;
-        microGameY = GetComponent<microGameSetup>().microGameY;
-
-        GetComponent<macroGameSetup>().setupMacroLevel();
-        GetComponent<microGameSetup>().setupMicroLevel();
-        userInterfaceManager.GetComponent<userInterface>().setupUi();
+        Application.targetFrameRate = 30;
+        w = Screen.width;
+        h = Screen.height;
+        GetComponent<microGameSetup>().maxSize = MaxNumberOfBacterias;
+        setupWorld();
     }
     public void changeToMicro(GameObject colony){
         Color colonyColor = colony.GetComponent<colony>().color;
@@ -31,21 +28,28 @@ public class gameManager : MonoBehaviour {
         canvas.SetActive(false);
         camera.transform.position = cameraMicroPos;
         int size = colony.GetComponent<colony>().size;
-        if (size > 50) size = 50;
+        if (size > MaxNumberOfBacterias) size = MaxNumberOfBacterias;
         for (int i = 0; i < size; i++){
-            float x = Random.Range(microBottomLeftPosition.x, microBottomLeftPosition.x + microGameX);
-            float y = Random.Range(microBottomLeftPosition.y, microBottomLeftPosition.y + microGameY);                
+            float x = Random.Range(cameraMicroPos.x - (w/2) +2, cameraMicroPos.x + (w/2) -2);
+            float y = Random.Range(cameraMicroPos.y - (h/2) +2, cameraMicroPos.y + (h/2) -2);                
             bacteria = GetComponent<microGameSetup>().createFromPool(bacteria, new Vector2(x,y));
             bacteria.GetComponent<SpriteRenderer>().color = colonyColor;
         }
     }
 
-     public void changeToMacro(GameObject colony){
+    public void changeToMacro(GameObject colony){
         GameObject bacteria = colony.GetComponent<colony>().bacteria;
         canvas.SetActive(true);
         camera.transform.position = cameraMacroPos;
         GetComponent<microGameSetup>().destroyAll(bacteria);
     }
 
+    public void setupWorld(){
+        GetComponent<macroGameSetup>().cameraMacroPos = cameraMacroPos;
+        GetComponent<macroGameSetup>().setupMacroLevel();
+        GetComponent<microGameSetup>().cameraMicroPos = cameraMicroPos;
+        GetComponent<microGameSetup>().setupMicroLevel();
+        userInterfaceManager.GetComponent<userInterface>().setupUi();
+    }
 
 }

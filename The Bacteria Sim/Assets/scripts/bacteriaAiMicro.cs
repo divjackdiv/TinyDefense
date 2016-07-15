@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class bacteriaAiMicro : MonoBehaviour
 {
     public GameObject GameManager;
-  //  public float nbOfFrames = 5; // this script is call every x frames, x being this value, this is for optimization 
+    public float nbOfFrames = 5; // this script is call every x frames, x being this value, this is for optimization 
     public float speed = 0.20f; // Speed the attached gameObject moves at
     public float eatCountdown = 5; //every xtime a game object should eat
     public int startingFood = 3; // How much food the game object starts with
@@ -21,8 +21,8 @@ public class bacteriaAiMicro : MonoBehaviour
 	Vector2 pos;
     Vector2 direction;
     Quaternion rotation;
-    float t;
     float time;
+    float frameT;
     int food;
     bool isTumbling;
 	bool foundFood;
@@ -53,18 +53,19 @@ public class bacteriaAiMicro : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //frame++;
-        //if (frame % nbOfFrames == 0) {
-            time += Time.deltaTime;
-            t += Time.deltaTime;
+        time += Time.deltaTime;
+        frameT += Time.deltaTime;
+        frame++;
+        if (frame % nbOfFrames == 0) {
             pos = transform.position;
+            movementManagment();
             checkHunger();
             checkDivide();
             checkAge(); 
             detectFood();
-            movementManagment();
+            frameT = 0;
             //drawTrail();
-        //}
+        }
     }
 
     void drawTrail()
@@ -81,7 +82,6 @@ public class bacteriaAiMicro : MonoBehaviour
         rotation = transform.rotation;
         food = startingFood;
         time = 0;
-        t = 0;
         isTumbling = false;
         direction = transform.position;
 		pos = transform.position;
@@ -123,7 +123,7 @@ public class bacteriaAiMicro : MonoBehaviour
         }
 		//Set Direction if there is no food target
 		
-        if (!foundFood && Vector2.Distance(transform.position, direction) <= 1) {
+        if (!foundFood && Vector2.Distance(transform.position, direction) <= 5) {
             float x, y;
             x = Random.Range (direction.x - maxPosChange, direction.x + maxPosChange);
             y = Random.Range (direction.y - maxPosChange, direction.y + maxPosChange);
@@ -146,8 +146,8 @@ public class bacteriaAiMicro : MonoBehaviour
         Vector3 d = new Vector2(direction.x - transform.position.x , direction.y - transform.position.y);
         float angle = Mathf.Atan2 (d.y, d.x) * Mathf.Rad2Deg;
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * rotationSpeed);
-        transform.Translate(Vector2.right * Time.deltaTime * speed);
+        transform.rotation = Quaternion.Slerp(transform.rotation, q, frameT * rotationSpeed);
+        transform.Translate(Vector2.right * frameT * speed);
         //GetComponent<Rigidbody2D>().AddForce(transform.right* Time.deltaTime * speed);
     }
 
@@ -162,7 +162,6 @@ public class bacteriaAiMicro : MonoBehaviour
         }
         //now Actually create another cell
         bool created = GameManager.GetComponent<microGameSetup>().createFromPool(transform.gameObject, transform.position);
-        if (created) t = 0;
     }
 
     void die()
@@ -200,7 +199,7 @@ public class bacteriaAiMicro : MonoBehaviour
     }
     void checkDivide()
     {
-        if (t > secondsTillDivide && food >= foodNeededToDivide)
+        if (time % secondsTillDivide <= 0.5 && food >= foodNeededToDivide)
         {
             divide();
         }

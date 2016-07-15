@@ -8,17 +8,18 @@ using System.Reflection;
 public class macroGameSetup : MonoBehaviour {
 
     public List<GameObject> Colonies;
-    public Vector2 bottomLeftPosition;
-    public float x;
-    public float y;
+    public Vector2 cameraMacroPos;
+    public GameObject Wall;
+    public GameObject backgroundImage;
 
     public void setupMacroLevel(){
-        GetComponent<microGameSetup>().objects = new List<GameObject>();
+        setupWalls();
+        float w = Screen.width;
+        float h = Screen.height;
         for (int i = 0; i < Colonies.Count; i++){
-            float localX = (float) Random.Range(bottomLeftPosition.x, bottomLeftPosition.x + x);
-            float localY = (float) Random.Range(bottomLeftPosition.y, bottomLeftPosition.y + x);
+            float localX = (float) Random.Range(cameraMacroPos.x - (w/2), cameraMacroPos.x + (w/2));
+            float localY = (float) Random.Range(cameraMacroPos.y - (h/2), cameraMacroPos.y + (h/2));
             createRandColony(Colonies[i],new Vector2(localX,localY));
-            GetComponent<microGameSetup>().objects.Add(Colonies[i].GetComponent<colony>().bacteria);
         }
     }
     public GameObject createRandColony(GameObject g, Vector2 pos)
@@ -29,5 +30,20 @@ public class macroGameSetup : MonoBehaviour {
         colony.GetComponent<colony>().growthSpeed = Random.Range (0.6f, 1.2f);
         colony.GetComponent<colony>().movementSpeed = Random.Range (1,2) /10;
         return colony;
+    }
+
+    public void setupWalls(){
+        float w = Screen.width;
+        float h = Screen.height;
+        GameObject eastWall = (GameObject)Instantiate(Wall, new Vector2(cameraMacroPos.x - (w/2), cameraMacroPos.y), Quaternion.identity);
+        eastWall.transform.localScale = new Vector3(5f,h,0);
+        GameObject westWall = (GameObject)Instantiate(Wall, new Vector2(cameraMacroPos.x + (w/2), cameraMacroPos.y), Quaternion.identity);
+        westWall.transform.localScale = new Vector3(5f,h,0);
+        GameObject southWall = (GameObject)Instantiate(Wall, new Vector2(cameraMacroPos.x, cameraMacroPos.y - (h/2)), Quaternion.identity);
+        southWall.transform.localScale = new Vector3(w,5f,0);
+        GameObject northWall = (GameObject)Instantiate(Wall, new Vector2(cameraMacroPos.x, cameraMacroPos.y + (h/2)), Quaternion.identity);
+        northWall.transform.localScale = new Vector3(w,5f,0);
+        GameObject img = (GameObject) Instantiate(backgroundImage,new Vector3(cameraMacroPos.x, cameraMacroPos.y,1), Quaternion.identity);
+        img.transform.localScale = new Vector3(w,h,1);
     }
 }

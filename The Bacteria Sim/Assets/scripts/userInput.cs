@@ -11,24 +11,19 @@ public class userInput : MonoBehaviour {
 
 	//particle system
 	public GameObject gas;
-    public GameObject macroGas;
     void Update()
     {
 		if (Input.GetButton("Gas")){
 			if (!EventSystem.current.IsPointerOverGameObject ()) {
 				Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 				mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-                if (isMacro) useGas (mousePosition, macroGas);
-                else useGas (mousePosition, gas);
+                useGas (mousePosition, gas);
 			}
 		} 
 		else {
 			if (gas.GetComponent<ParticleSystem>().isPlaying) {
 				gas.GetComponent<ParticleSystem>().Stop(true);
 			}
-            if (macroGas.GetComponent<ParticleSystem>().isPlaying) {
-                macroGas.GetComponent<ParticleSystem>().Stop(true);
-            }
 		}
     }
 

@@ -15,7 +15,7 @@ public class userInterface : MonoBehaviour {
     List<GameObject> objects;
 
     public void setupUi(){
-        objects =  GameManager.GetComponent<microGameSetup>().objects;
+        objects =  GameManager.GetComponent<macroGameSetup>().Colonies;
         for (int i = 0; i < 3 /*objects.Count*/; i++)
         {
             canvasButtons.GetChild(i).GetComponent<Image>().sprite = objects[i].GetComponent<SpriteRenderer>().sprite;
