@@ -53,7 +53,63 @@ public class CameraControl : MonoBehaviour
 			transform.position = new Vector3(tempX, tempY, -10);*/
 
 //Zoom et Dezoom
-		if(Input.GetAxis("Mouse ScrollWheel") != 0  )
+
+		/*if (Input.touchCount == 2)
+        {
+            // Store both touches.
+            Touch touchZero = Input.GetTouch(0);
+            Touch touchOne = Input.GetTouch(1);
+
+            // Find the position in the previous frame of each touch.
+            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+            // Find the magnitude of the vector (the distance) between the touches in each frame.
+            float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+            float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+
+            // Find the difference in the distances between each frame.
+            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+            if (deltaMagnitudeDiff > 0)
+			{
+				if (isMacro && fov == minFOV){
+            		Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            		RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+            		if (hit){
+                		if (hit.collider != null){
+                			Camera.main.orthographicSize = maxFOV;
+                			fov = maxFOV;
+                			gameManager.GetComponent<gameManager>().changeToMicro(hit.collider.gameObject);
+                			currentColony = hit.collider.gameObject;
+							isMacro = false;
+							userInput.GetComponent<userInput>().isMacro = isMacro;	
+                		}
+                	}
+					
+				}
+				else if((fov > minFOV && isMacro) || (fov >minFOV && !isMacro) ){
+					Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+					zoomTowards(mousePos, deltaMagnitudeDiff);
+				}
+			}
+			else if(deltaMagnitudeDiff < 0)
+			{	
+				if(!isMacro && fov == maxFOV){
+					Camera.main.orthographicSize = maxFOV;
+					fov = maxFOV;
+                	gameManager.GetComponent<gameManager>().changeToMacro(currentColony);
+					isMacro = true;
+					userInput.GetComponent<userInput>().isMacro = isMacro;
+				}
+				else if((fov < maxFOV && isMacro) || (fov < maxFOV && !isMacro) ){
+					Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+					zoomTowards(mousePos, deltaMagnitudeDiff);
+				}
+			}  
+		}
+	}*/
+	if(Input.GetAxis("Mouse ScrollWheel") != 0  )
 		{
 
 			if (Input.GetAxis("Mouse ScrollWheel") > 0)
@@ -102,3 +158,49 @@ public class CameraControl : MonoBehaviour
 		transform.position += (pos - transform.position) * multiplier;
 	}
 }
+
+
+/*
+//Zoom et Dezoom
+		if(Input.GetAxis("Mouse ScrollWheel") != 0  )
+		{
+
+			if (Input.GetAxis("Mouse ScrollWheel") > 0)
+			{
+				if (isMacro && fov == minFOV){
+            		Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            		RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+            		if (hit){
+                		if (hit.collider != null){
+                			Camera.main.orthographicSize = maxFOV;
+                			fov = maxFOV;
+                			gameManager.GetComponent<gameManager>().changeToMicro(hit.collider.gameObject);
+                			currentColony = hit.collider.gameObject;
+							isMacro = false;
+							userInput.GetComponent<userInput>().isMacro = isMacro;	
+                		}
+                	}
+					
+				}
+				else if((fov > minFOV && isMacro) || (fov >minFOV && !isMacro) ){
+					Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+					zoomTowards(mousePos, -1);
+				}
+			}
+			else if(Input.GetAxis("Mouse ScrollWheel") < 0)
+			{	
+				if(!isMacro && fov == maxFOV){
+					Camera.main.orthographicSize = maxFOV;
+					fov = maxFOV;
+                	gameManager.GetComponent<gameManager>().changeToMacro(currentColony);
+					isMacro = true;
+					userInput.GetComponent<userInput>().isMacro = isMacro;
+				}
+				else if((fov < maxFOV && isMacro) || (fov < maxFOV && !isMacro) ){
+					Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+					zoomTowards(mousePos, 1);
+				}
+			}  
+		}
+	}
+	*/

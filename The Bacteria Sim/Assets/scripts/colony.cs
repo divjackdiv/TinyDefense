@@ -5,7 +5,7 @@ public class colony : MonoBehaviour {
 
 	public GameObject bacteria;
 	public Color color;
-	public int size = 1;
+	public float size = 1;
 	public Vector2 position;
 	public float growthSpeed = 1;
 	public float movementSpeed = 0.2f;
@@ -17,7 +17,7 @@ public class colony : MonoBehaviour {
 	void Start () {
 		startScale = transform.localScale;
 		GetComponent<SpriteRenderer>().color = color;
-		growthSpeed *= 10;
+
 		direction = randomDirection(maxPosChange);
 		isWaiting = false;
 	}
@@ -31,8 +31,8 @@ public class colony : MonoBehaviour {
 	}
 
 	void grow (float speed){
-		transform.localScale += new Vector3(0.001f,0.001f,0);
-		size += 1;
+		transform.localScale += new Vector3(growthSpeed / 1000,growthSpeed / 1000,0);
+		size += growthSpeed;
 	} 
 
 	void move(float speed){

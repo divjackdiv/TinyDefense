@@ -27,8 +27,8 @@ public class macroGameSetup : MonoBehaviour {
         GameObject colony = (GameObject)Instantiate(g, pos, Quaternion.identity);
         Color randColor = new Color(Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f), 1);
         colony.GetComponent<colony>().color = randColor;
-        colony.GetComponent<colony>().growthSpeed = Random.Range (0.6f, 1.2f);
-        colony.GetComponent<colony>().movementSpeed = Random.Range (1,2) /10;
+        colony.GetComponent<colony>().growthSpeed = Random.Range (0.5f, 1.5f);
+        colony.GetComponent<colony>().movementSpeed = Random.Range (2.0f,5.0f);
         return colony;
     }
 

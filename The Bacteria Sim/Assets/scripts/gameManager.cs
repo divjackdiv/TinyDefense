@@ -27,7 +27,7 @@ public class gameManager : MonoBehaviour {
         GameObject bacteria = colony.GetComponent<colony>().bacteria;
         canvas.SetActive(false);
         camera.transform.position = cameraMicroPos;
-        int size = colony.GetComponent<colony>().size;
+        int size = (int) colony.GetComponent<colony>().size;print(size);
         if (size > MaxNumberOfBacterias) size = MaxNumberOfBacterias;
         for (int i = 0; i < size; i++){
             float x = Random.Range(cameraMicroPos.x - (w/2) +2, cameraMicroPos.x + (w/2) -2);
