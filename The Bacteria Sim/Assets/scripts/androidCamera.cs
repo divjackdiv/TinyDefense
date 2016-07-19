@@ -10,7 +10,6 @@ public class androidCamera : MonoBehaviour
 	//public GameObject dummy;
 	//dummy.GetComponent<Text>().text += "at  " + transform.position + " zooming towards " + pos;
 	public GameObject gameManager;
-	public bool isMacro = true;
 	public float speed;
 
 	public float startFOV = 300;
@@ -18,8 +17,6 @@ public class androidCamera : MonoBehaviour
 	public float minFOV = 30;
 	private float fov;
 
-	public bool mode = true;
-	public GameObject gas;
 	private GameObject currentColony;
 
 	void Start () 
@@ -32,22 +29,11 @@ public class androidCamera : MonoBehaviour
 	{
 //Horizontal et Vertical
 		if (Input.touchCount == 1 ) {
-			if ( mode  && Input.GetTouch(0).phase == TouchPhase.Moved){
+			if (Input.GetTouch(0).phase == TouchPhase.Moved){
 				Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
             	transform.Translate(-touchDeltaPosition.x * speed * Time.deltaTime, -touchDeltaPosition.y * speed * Time.deltaTime, 0);
 			}
-			// Gas
-	        else if ( !mode ){
-				Vector2 touchDeltaPosition =  Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
-				Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-	            useGas (touchDeltaPosition, gas);
-			} 
         }
-        else {
-			if (gas.GetComponent<ParticleSystem>().isPlaying) {
-				gas.GetComponent<ParticleSystem>().Stop(true);
-			}
-		}
 //Zoom et Dezoom
 
 		if (Input.touchCount == 2)
@@ -72,33 +58,14 @@ public class androidCamera : MonoBehaviour
 
             if (deltaMagnitudeDiff < 0)
 			{
-				if (isMacro && fov == minFOV){
-            		RaycastHit2D hit = Physics2D.Raycast(middlePos, Vector2.zero);
-            		if (hit){
-                		if (hit.collider != null){
-                			Camera.main.orthographicSize = maxFOV;
-                			fov = maxFOV;
-                			gameManager.GetComponent<gameManager>().changeToMicro(hit.collider.gameObject);
-                			currentColony = hit.collider.gameObject;
-							isMacro = false;
-                		}
-                	}
-					
-				}
-				else if((fov > minFOV && isMacro) || (fov >minFOV && !isMacro) ){
+				if(fov > minFOV){
 					
 					zoomTowards(middlePos, -1);
 				}
 			}
 			else if(deltaMagnitudeDiff > 0)
 			{	
-				if(!isMacro && fov == maxFOV){
-					Camera.main.orthographicSize = maxFOV;
-					fov = maxFOV;
-                	gameManager.GetComponent<gameManager>().changeToMacro(currentColony);
-					isMacro = true;
-				}
-				else if((fov < maxFOV && isMacro) || (fov < maxFOV && !isMacro) ){
+				if(fov < maxFOV){
 					zoomTowards(middlePos, 1);
 				}
 			}  
@@ -113,13 +80,4 @@ public class androidCamera : MonoBehaviour
 		transform.position += (pos - transform.position) * multiplier;
 	}
 
-	public void	useGas(Vector2 pos, GameObject g){
-		g.transform.position = pos; 
-		g.GetComponent<ParticleSystem>().Play(false);
-	}
-	
-	public void changeMode(){
-		if(mode == true) mode = false;
-		else mode = true;
-	}
 }
