@@ -6,8 +6,6 @@ using UnityEngine.EventSystems;
 using System.Reflection;
 
 public class gameManager : MonoBehaviour {
-    public GameObject debug;
-    private GameObject lastdebug;
     public Vector2 origin;
     public float widthOfWorld;
     public float heightOfWorld;
@@ -29,7 +27,7 @@ public class gameManager : MonoBehaviour {
         Xstep = widthOfWorld /widthOfGrid;
         Ystep = heightOfWorld / heightOfGrid;
         worldGrid = new List<Dictionary<int, GameObject>>();
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 60;
         setupWorld();
         wasHoldingDown = false;
         isDragging = false;
@@ -64,8 +62,6 @@ public class gameManager : MonoBehaviour {
                 currentGameObject.transform.position = nearestPoint(mousePos);
                 int x = (int)(Mathf.Round(mousePos.x)/Xstep);
                 int y = (int)(Mathf.Round(mousePos.y)/Ystep);
-                if(lastdebug != null) Destroy(lastdebug);
-                lastdebug = (GameObject) Instantiate(debug, mousePos, Quaternion.identity);
                 worldGrid[x][y] = currentGameObject;
                 x = (int)(Mathf.Ceil(oldPos.x)/Xstep);
                 y = (int)(Mathf.Ceil(oldPos.y)/Ystep);

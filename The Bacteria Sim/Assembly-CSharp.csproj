@@ -52,6 +52,7 @@
      <Compile Include="Assets\scripts\colony.cs" />
      <Compile Include="Assets\scripts\gameManager.cs" />
      <Compile Include="Assets\scripts\turret.cs" />
+     <Compile Include="Assets\scripts\waveSpawner.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
