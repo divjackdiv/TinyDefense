@@ -41,18 +41,20 @@ public class gameManager : MonoBehaviour {
         if (Input.GetButton("Fire1") && !isDragging){
             if (currentGameObject != null){
                 currentGameObject.transform.position = mousePos;
-            } 
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-            if (hit){
-                if (hit.collider != null){
-                    if (hit.collider.tag == "Turret"){
-                        wasHoldingDown = true;
-                        currentGameObject = hit.collider.gameObject;
-                        if (oldPos == defaultNullPos){
-                            oldPos = currentGameObject.transform.position;
+            }
+            else{
+                RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+                if (hit){
+                    if (hit.collider != null){
+                        if (hit.collider.tag == "Turret"){
+                            wasHoldingDown = true;
+                            currentGameObject = hit.collider.gameObject;
+                            if (oldPos == defaultNullPos){
+                                oldPos = currentGameObject.transform.position;
+                            }
                         }
-                    }
 
+                    }
                 }
             }
         }
@@ -70,9 +72,9 @@ public class gameManager : MonoBehaviour {
             }
             else {
                 currentGameObject.transform.position = oldPos;
-                currentGameObject = null;
                 oldPos = defaultNullPos;
             }
+            currentGameObject = null;
             wasHoldingDown = false;
         }
         else if (Input.GetButton("Fire2") && !isDragging){
@@ -142,7 +144,7 @@ public class gameManager : MonoBehaviour {
     bool isTaken(Vector2 mousePosition){
         int x = (int)(Mathf.Ceil(mousePosition.x/Xstep));
         int y = (int)(Mathf.Ceil(mousePosition.y/Ystep));
-        if(worldGrid[x][y] != null)return true; 
+        if( x < 0 || y < 0 || x > worldGrid.Count || y > worldGrid[x].Count || worldGrid[x][y] != null) return true; 
         return false;
     }
 

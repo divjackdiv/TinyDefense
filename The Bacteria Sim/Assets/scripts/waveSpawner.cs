@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/*
+		
+*/
 public class waveSpawner : MonoBehaviour {
 
 	public GameObject center;
@@ -39,25 +42,24 @@ public class waveSpawner : MonoBehaviour {
 		float yScale = transform.localScale.y;
 		//south
 		if (mainDir == 0){
-			x = Random.Range(transform.position.x - (xScale/2), transform.position.x + (xScale/2));
+			x = Random.Range(transform.position.x - (xScale/2), transform.position.x + (widthOfWorld/2));
 			y = Random.Range(transform.position.y - (yScale/2), transform.position.x - (heightOfWorld/2));
 		}
 		//east
 		else if (mainDir == 1){
-			x = Random.Range(transform.position.x - (xScale/2), transform.position.x + (xScale/2));
-			y = Random.Range(transform.position.y + (widthOfWorld/2), transform.position.y + (yScale/2));
+			x = Random.Range(transform.position.x + (widthOfWorld/2), transform.position.x + (xScale/2));
+			y = Random.Range(transform.position.y - (yScale/2), transform.position.y + (heightOfWorld/2));
 		}
 		//north
 		else if (mainDir == 2){
-			x = Random.Range(transform.position.x - (xScale/2), transform.position.x + (xScale/2));
+			x = Random.Range(transform.position.x - (widthOfWorld/2), transform.position.x + (xScale/2));
 			y = Random.Range(transform.position.x + (heightOfWorld/2), transform.position.y + (yScale/2));
 		}
 		//west
 		else if (mainDir == 3){
-			x = Random.Range(transform.position.x - (xScale/2), transform.position.x + (xScale/2));
-			y = Random.Range(transform.position.y - (yScale/2), transform.position.y - (widthOfWorld/2));
+			x = Random.Range(transform.position.x - (xScale/2), transform.position.y - (widthOfWorld/2));
+			y = Random.Range(transform.position.y - (heightOfWorld/2), transform.position.y + (yScale/2));
 		}
-		print("mainDir " + mainDir +" x : " + x + " y :" + y);
 		return new Vector2(x,y);
 	}
 	void upgradeWave(){
