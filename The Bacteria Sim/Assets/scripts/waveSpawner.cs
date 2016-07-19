@@ -75,9 +75,12 @@ public class waveSpawner : MonoBehaviour {
 	void createWave(int typesOfEnnemies){
 		for (int i = 0; i < typesOfEnnemies; i++){
 			int amount = ennemies[i].GetComponent<colony>().amount;
+			int maxGroupNb = ennemies[i].GetComponent<colony>().maxGroupNb;
 			amount += (ennemies[i].GetComponent<colony>().amountPerLevel * ennemyLevel);
+			Vector2 randPos = getRandSpawnPoint();
 			for (int j = 0; j < amount; j++){
-				createEnnemy(ennemies[i], getRandSpawnPoint());
+				if (j % maxGroupNb == 0 && j > 0) randPos = getRandSpawnPoint();
+				createEnnemy(ennemies[i], new Vector2 (randPos.x+(j*0.1f), randPos.y+(j*0.1f)));
 			}
 		}
 	}

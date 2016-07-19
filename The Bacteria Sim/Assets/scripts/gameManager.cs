@@ -14,6 +14,7 @@ public class gameManager : MonoBehaviour {
     float Xstep;
     float Ystep;
     public Camera camera;
+    public GameObject center;
     public Vector3 cameraMacroPos;
     public List<GameObject> basicTowers;
     private GameObject currentGameObject;
@@ -105,6 +106,13 @@ public class gameManager : MonoBehaviour {
                 worldGrid[i].Add(j,null);
             }
         }
+        int centerSize = center.GetComponent<center>().size;
+        Vector2 centerPos = convertPosToGrid(center.transform.position);
+        for (int i = 0; i <= centerSize*2; i++){
+            for (int j = 0; j <= centerSize*2; j++){
+                worldGrid[(int)(centerPos.x)-centerSize+i][(int)(centerPos.y)-centerSize+j] = center;
+            }
+        }
     }
 
     public void OnDrag (int i){ 
@@ -133,7 +141,7 @@ public class gameManager : MonoBehaviour {
         else{
             int x = (int)(Mathf.Ceil(p.x)/Xstep);
             int y = (int)(Mathf.Ceil(p.y)/Ystep);
-            draggedObj.transform.position =  p;
+            draggedObj.transform.position = p;
             worldGrid[x][y] = draggedObj;
             MonoBehaviour[] scripts = draggedObj.GetComponents<MonoBehaviour>();
             foreach (MonoBehaviour script in scripts) script.enabled = true;
@@ -151,6 +159,12 @@ public class gameManager : MonoBehaviour {
     Vector2 nearestPoint(Vector2 v){
         int x = (int) ((Mathf.Round(v.x/Xstep))*Xstep);
         int y = (int) ((Mathf.Round(v.y/Ystep))*Ystep); 
+        return new Vector2(x,y);
+    }
+
+    Vector2 convertPosToGrid(Vector2 v){
+        int x = (int)(Mathf.Round(v.x/Xstep));
+        int y = (int)(Mathf.Round(v.y/Ystep));
         return new Vector2(x,y);
     }
 

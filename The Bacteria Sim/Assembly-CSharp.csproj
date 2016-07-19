@@ -49,6 +49,7 @@
      <Compile Include="Assets\scripts\CameraDragger.cs" />
      <Compile Include="Assets\scripts\ModifyTurret.cs" />
      <Compile Include="Assets\scripts\androidCamera.cs" />
+     <Compile Include="Assets\scripts\center.cs" />
      <Compile Include="Assets\scripts\colony.cs" />
      <Compile Include="Assets\scripts\gameManager.cs" />
      <Compile Include="Assets\scripts\turret.cs" />

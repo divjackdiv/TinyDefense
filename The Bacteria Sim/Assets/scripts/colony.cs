@@ -10,6 +10,7 @@ public class colony : MonoBehaviour {
 	public float hpPerLevel = 2;
 	private float startSpeed;
 	public float speed = 1;
+	public int maxGroupNb = 10;
 	public float speedPerLevel = 0;
 	public float armor = 0;
 	public float armorPerLevel = 0.5f;
