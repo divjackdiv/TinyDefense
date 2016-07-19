@@ -9,16 +9,15 @@ public class waveSpawner : MonoBehaviour {
 	float widthOfWorld;
     float heightOfWorld;
     public int waveCount;
-    int waveNumber;
+    public int waveNumber;
     int ennemyLevel;
     int typesOfEnnemies;
     public List<GameObject> ennemies;
 	// Use this for initialization
 	void Start () {
 		waveCount = 0;
-    	waveNumber = 0;
-    	typesOfEnnemies = 1; 
-    	ennemyLevel = 0;
+    	typesOfEnnemies = (int) Mathf.Floor(waveNumber/3); 
+    	ennemyLevel = (int) Mathf.Floor(waveNumber/5);
 		widthOfWorld = GameManager.GetComponent<gameManager>().widthOfWorld;
 		heightOfWorld = GameManager.GetComponent<gameManager>().heightOfWorld;
 	}
@@ -26,9 +25,9 @@ public class waveSpawner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (waveCount <=0) {
-			waveNumber++;
 			upgradeWave();
 			createWave(typesOfEnnemies);
+			waveNumber++;
 		}
 	}
 
@@ -58,7 +57,7 @@ public class waveSpawner : MonoBehaviour {
 			x = Random.Range(transform.position.x - (xScale/2), transform.position.x + (xScale/2));
 			y = Random.Range(transform.position.y - (yScale/2), transform.position.y - (widthOfWorld/2));
 		}
-	//	print("mainDir " + mainDir +" x : " + x + " y :" + y);
+		print("mainDir " + mainDir +" x : " + x + " y :" + y);
 		return new Vector2(x,y);
 	}
 	void upgradeWave(){
