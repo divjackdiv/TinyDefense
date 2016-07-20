@@ -6,30 +6,46 @@ using UnityEngine.EventSystems;
 using System.Reflection;
 
 public class gameManager : MonoBehaviour {
+
+    //World Creation
     public Vector2 origin;
     public float widthOfWorld;
     public float heightOfWorld;
     public int widthOfGrid;
     public int heightOfGrid;
+    List<Dictionary<int, GameObject>> worldGrid;
     float Xstep;
     float Ystep;
+
+    //Related objects in the scene
+    public GameObject canvas;
     public Camera camera;
     public GameObject center;
     public Vector3 cameraMacroPos;
-    public List<GameObject> basicTowers;
+
+    //Dragging and dropping
     private GameObject currentGameObject;
     private GameObject draggedObj;
     bool isDragging;
     bool wasHoldingDown;
     Vector2 oldPos;
     Vector2 defaultNullPos;
-    List<Dictionary<int, GameObject>> worldGrid;
+
+    //Money
+    public int money;
+    //Tower Creation 
+    public List<GameObject> basicTowers;
+    public List<Color> colors;
+    static int currentColor; 
+
     public void Start(){
+        Application.targetFrameRate = 60;
+
         Xstep = widthOfWorld /widthOfGrid;
         Ystep = heightOfWorld / heightOfGrid;
         worldGrid = new List<Dictionary<int, GameObject>>();
-        Application.targetFrameRate = 60;
         setupWorld();
+
         wasHoldingDown = false;
         isDragging = false;
         defaultNullPos = new Vector2(-1,-1);
@@ -120,9 +136,7 @@ public class gameManager : MonoBehaviour {
         Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
         if (draggedObj == null ){
-            draggedObj = createTower(i);
-            MonoBehaviour[] scripts = draggedObj.GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour script in scripts) script.enabled = false;
+            draggedObj = createTower(i, colors[currentColor]);
         }
         draggedObj.transform.position = mousePosition;
         //Should probably play some wiggling animation
@@ -134,24 +148,22 @@ public class gameManager : MonoBehaviour {
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
         if (mousePosition.x < 0 || mousePosition.y < 0)  Destroy(draggedObj);
         Vector2 p = nearestPoint(mousePosition);
-        if (isTaken(p))
+        if (isTaken(p) || draggedObj.GetComponent<Turret>().cost > money)
         {
             if(draggedObj != null) Destroy(draggedObj);
         }
         else{
-            int x = (int)(Mathf.Ceil(p.x)/Xstep);
-            int y = (int)(Mathf.Ceil(p.y)/Ystep);
+            int x = (int)(Mathf.Round(p.x)/Xstep);
+            int y = (int)(Mathf.Round(p.y)/Ystep);
             draggedObj.transform.position = p;
             worldGrid[x][y] = draggedObj;
-            MonoBehaviour[] scripts = draggedObj.GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour script in scripts) script.enabled = true;
         }
         draggedObj = null;
     }
 
     bool isTaken(Vector2 mousePosition){
-        int x = (int)(Mathf.Ceil(mousePosition.x/Xstep));
-        int y = (int)(Mathf.Ceil(mousePosition.y/Ystep));
+        int x = (int)(Mathf.Round(mousePosition.x/Xstep));
+        int y = (int)(Mathf.Round(mousePosition.y/Ystep));
         if( x < 0 || y < 0 || x > worldGrid.Count || y > worldGrid[x].Count || worldGrid[x][y] != null) return true; 
         return false;
     }
@@ -168,8 +180,11 @@ public class gameManager : MonoBehaviour {
         return new Vector2(x,y);
     }
 
-    GameObject createTower(int i){
+    GameObject createTower(int i, Color col){
         GameObject tower = Instantiate(basicTowers[i]);
+        tower.GetComponent<SpriteRenderer>().color = col; 
+        tower.transform.GetChild(0).GetComponent<ParticleSystem>().startColor = col; 
+        tower.GetComponent<Turret>().resistances[currentColor] = true;
         tower.GetComponent<Rigidbody2D>().isKinematic = true;
         return tower;
     }
@@ -179,4 +194,9 @@ public class gameManager : MonoBehaviour {
         float angle = (int) (Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg);
         g.transform.rotation  = Quaternion.Slerp(g.transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle)),1);
     }
+    public void changeColor(int i){
+        currentColor = i;
+    }
+
+
 }

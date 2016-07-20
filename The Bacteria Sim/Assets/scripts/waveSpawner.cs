@@ -1,41 +1,49 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+ using UnityEngine.UI;
 /*
 		
 */
 public class waveSpawner : MonoBehaviour {
 
 	public GameObject center;
-	public GameObject GameManager;
+	public GameObject gameManager;
+	public GameObject canvas;
+
 	float widthOfWorld;
     float heightOfWorld;
+
     public int waveCount;
     public int waveNumber;
     int ennemyLevel;
     int typesOfEnnemies;
+    static Dictionary<string, int> bonusMoney;
     public List<GameObject> ennemies;
 
-    public Dictionary<GameObject, List<GameObject>> objectPool;
-    public Dictionary<GameObject, List<GameObject>> createdPool;
+    public List<Color> colors;
+
+    static public Dictionary<string , List<GameObject>> objectPool;
+    static public Dictionary<string, List<GameObject>> createdPool;
 	// Use this for initialization
 	void Start () {
 		//Setup the Object Pool
-		objectPool = new Dictionary<GameObject, List<GameObject>>();
-		createdPool = new Dictionary<GameObject, List<GameObject>>();
+		objectPool = new Dictionary<string, List<GameObject>>();
+		createdPool = new Dictionary<string, List<GameObject>>();
+		bonusMoney = new Dictionary<string, int>();
 		for (int i = 0; i < ennemies.Count; i++){
-			objectPool.Add(ennemies[i], new List<GameObject>());
-			createdPool.Add(ennemies[i], new List<GameObject>());
+			objectPool.Add(ennemies[i].tag, new List<GameObject>());
+			createdPool.Add(ennemies[i].tag, new List<GameObject>());
+			bonusMoney.Add(ennemies[i].tag, 0);
 			setupPool(ennemies[i], 150);
 		}
-
+        //setup waves
 		waveCount = 0;
     	typesOfEnnemies = (int) Mathf.Floor(waveNumber/3);
     	if (typesOfEnnemies > ennemies.Count) typesOfEnnemies = ennemies.Count; 
     	ennemyLevel = (int) Mathf.Floor(waveNumber/5);
-		widthOfWorld = GameManager.GetComponent<gameManager>().widthOfWorld;
-		heightOfWorld = GameManager.GetComponent<gameManager>().heightOfWorld;
+		widthOfWorld = gameManager.GetComponent<gameManager>().widthOfWorld;
+		heightOfWorld = gameManager.GetComponent<gameManager>().heightOfWorld;
 	}
 	
 	// Update is called once per frame
@@ -92,9 +100,11 @@ public class waveSpawner : MonoBehaviour {
 			int maxGroupNb = ennemies[i].GetComponent<colony>().maxGroupNb;
 			amount += (ennemies[i].GetComponent<colony>().amountPerLevel * ennemyLevel);
 			Vector2 randPos = getRandSpawnPoint();
+			GameObject createdEnnemy;
 			for (int j = 0; j < amount; j++){
 				if (j % maxGroupNb == 0 && j > 0) randPos = getRandSpawnPoint();
-				createEnnemy(ennemies[i], new Vector2 (randPos.x+(j*0.1f), randPos.y+(j*0.1f)));
+				createdEnnemy = createEnnemy(ennemies[i], new Vector2 (randPos.x+(j*0.1f), randPos.y+(j*0.1f)));
+				if(j == amount) bonusMoney[ennemies[i].tag] = createdEnnemy.GetComponent<colony>().bonusForGroup;
 			}
 		}
 	}
@@ -103,43 +113,56 @@ public class waveSpawner : MonoBehaviour {
 			populate(g);
 		}
 	}
-	void createEnnemy(GameObject g, Vector2 pos){
+	GameObject createEnnemy(GameObject g, Vector2 pos){
 		waveCount++;
 		GameObject ennemy ;
-		if(objectPool[g].Count <= 0){
+		if(objectPool[g.tag].Count <= 0){
 			setupPool(g, 100);
 		}
-		ennemy = objectPool[g][0];
+		ennemy = objectPool[g.tag][0];
 		ennemy.transform.position = pos;
-		objectPool[g].RemoveAt(0);
+		objectPool[g.tag].RemoveAt(0);
 		ennemy.SetActive(true);
 		ennemy.GetComponent<colony>().level = ennemyLevel;
 		ennemy.GetComponent<colony>().center = center;
 		ennemy.GetComponent<colony>().waveSpawner = gameObject;
-		createdPool[g].Add(ennemy);
+		ennemy.GetComponent<colony>().gameManager = gameManager;
+		int i = Random.Range(0, colors.Count-1);
+		ennemy.GetComponent<colony>().resistances[i] = true;
+		ennemy.GetComponent<SpriteRenderer>().color = colors[i];
+		createdPool[g.tag].Add(ennemy);
+		return ennemy;
 	}
 
     public GameObject populate(GameObject g){
         Vector2 pos = new Vector2(0,0);
         GameObject gO = (GameObject)Instantiate(g, pos, Quaternion.identity);
         gO.SetActive(false);
-        objectPool[g].Add(gO);
+        objectPool[g.tag].Add(gO);
         return gO;
     }
 
-    public void destroy(GameObject g)
-    {
-        g.SetActive(false);
-        objectPool[g].Add(g);
+    public void destroy(GameObject g, bool killedByPlayer){
+    	if (killedByPlayer){
+    		gameManager.GetComponent<gameManager>().money += g.GetComponent<colony>().money;
+    	}
+    	else {
+    		bonusMoney[g.tag] = 0;
+    	}
+    	if(createdPool[g.tag].Count == 0) gameManager.GetComponent<gameManager>().money += bonusMoney[g.tag];
+    	g.SetActive(false);
+    	createdPool[g.tag].RemoveAt(0);
+    	objectPool[g.tag].Add(g);
+    	waveCount--;
     }
 
     public void destroyAll(GameObject g)
     {
-        for (int i = 0; i < createdPool[g].Count; i++){
-            GameObject destroyed = createdPool[g][0];
-            destroy(destroyed); 
-            createdPool[g].RemoveAt(0);
-            objectPool[g].Add(destroyed);
+        for (int i = 0; i < createdPool[g.tag].Count; i++){
+            GameObject destroyed = createdPool[g.tag][0];
+            destroy(destroyed, false); 
+            createdPool[g.tag].RemoveAt(0);
+            objectPool[g.tag].Add(destroyed);
         }
     }
 }

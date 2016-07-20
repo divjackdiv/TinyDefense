@@ -1,45 +1,42 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class colony : MonoBehaviour {
 
+	public GameObject gameManager;
 	public GameObject center;
 	public GameObject waveSpawner;
 	public int level;
-	
-	public float lifePoints = 15;
+	public float lifePoints = 150;
 	public float hpPerLevel = 2;
-	public float maxHP = 150;
-	
+	public float maxHP = 1500;
+	public List<bool> resistances;
+
 	float startSpeed;
 	public float speed = 1;
 	public float speedPerLevel = 0.2f;
 	public float maxSpeed = 25;
-	
-	public float armor = 0;
-	public float armorPerLevel = 0.5f;
-	public float maxArmor = 20;
 
 	public int amount = 5;
 	public int amountPerLevel = 3;		
 	public int maxGroupNb = 10;
-
-	public float money = 2;
+	public float damageTakenByParticles = 0.5f;
+	public int money = 2;
+	public int bonusForGroup;
 
 	// Use this for initialization
 	void Start () {
 		lifePoints += (hpPerLevel * level);
-		if(lifePoints > maxHP) lifePoints = maxHP;
 		speed += (speedPerLevel * level);
 		if(speed > maxSpeed) speed = maxSpeed;
-		armor += (armorPerLevel * level);
-		if(armor > maxArmor) armor = maxArmor;
-		transform.localScale = new Vector3(lifePoints/10,lifePoints/10,1);
+		if(lifePoints > maxHP) transform.localScale = new Vector3(maxHP/100,maxHP/100,1);
+		else transform.localScale = new Vector3(lifePoints/100,lifePoints/100,1);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (lifePoints <= 0.5) die();
+		if (lifePoints <= 0.5) waveSpawner.GetComponent<waveSpawner>().destroy(gameObject,true);
 		objLookAt(gameObject, center.transform.position);
 		transform.Translate(Vector2.right * Time.deltaTime * speed);
 	}
@@ -52,19 +49,14 @@ public class colony : MonoBehaviour {
     }
 
     void OnParticleCollision(GameObject other) {
-    	float damage = - 0.1f;
-    	if(damage < 0){
-    		if(armor <=0){
-    			lifePoints += damage;
-	        	transform.localScale += new Vector3(damage/10,damage/10,0);
-    		}
-    		else {
-    			armor +=damage;
-    		}
-    	}
+		List<bool> turretRes = other.transform.parent.GetComponent<Turret>().resistances;
+		for(int t = 0; t<turretRes.Count; t++){
+			if(turretRes[t] == true && resistances[t] == false){
+		    	lifePoints -= damageTakenByParticles;
+			    transform.localScale -= new Vector3(damageTakenByParticles/100,damageTakenByParticles/100,0);
+		    	return;
+		    }
+		}
     }
-    void die(){
-    	Destroy(gameObject);
-    	waveSpawner.GetComponent<waveSpawner>().waveCount--;
-    }
+
 }

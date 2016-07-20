@@ -17,12 +17,9 @@ public class ModifyTurret : MonoBehaviour {
         if (Input.GetButton("Fire1")){
             if (currentObj != null) currentObj.transform.position = mousePos;
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-            print("fired");
             if (hit){
                 if (hit.collider != null){
-                    print("hit something");
                     if (hit.collider.tag == "Turret"){
-                                       print("hit the right stuff");
                         currentObj = hit.collider.gameObject;
                     }
 
