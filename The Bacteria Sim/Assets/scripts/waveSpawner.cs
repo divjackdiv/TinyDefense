@@ -16,10 +16,23 @@ public class waveSpawner : MonoBehaviour {
     int ennemyLevel;
     int typesOfEnnemies;
     public List<GameObject> ennemies;
+
+    public Dictionary<GameObject, List<GameObject>> objectPool;
+    public Dictionary<GameObject, List<GameObject>> createdPool;
 	// Use this for initialization
 	void Start () {
+		//Setup the Object Pool
+		objectPool = new Dictionary<GameObject, List<GameObject>>();
+		createdPool = new Dictionary<GameObject, List<GameObject>>();
+		for (int i = 0; i < ennemies.Count; i++){
+			objectPool.Add(ennemies[i], new List<GameObject>());
+			createdPool.Add(ennemies[i], new List<GameObject>());
+			setupPool(ennemies[i], 150);
+		}
+
 		waveCount = 0;
-    	typesOfEnnemies = (int) Mathf.Floor(waveNumber/3); 
+    	typesOfEnnemies = (int) Mathf.Floor(waveNumber/3);
+    	if (typesOfEnnemies > ennemies.Count) typesOfEnnemies = ennemies.Count; 
     	ennemyLevel = (int) Mathf.Floor(waveNumber/5);
 		widthOfWorld = GameManager.GetComponent<gameManager>().widthOfWorld;
 		heightOfWorld = GameManager.GetComponent<gameManager>().heightOfWorld;
@@ -27,7 +40,7 @@ public class waveSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (waveCount <=0) {
+		if (waveCount <= 0) {
 			upgradeWave();
 			createWave(typesOfEnnemies);
 			waveNumber++;
@@ -72,6 +85,7 @@ public class waveSpawner : MonoBehaviour {
 			ennemyLevel++;
 		}
 	}
+
 	void createWave(int typesOfEnnemies){
 		for (int i = 0; i < typesOfEnnemies; i++){
 			int amount = ennemies[i].GetComponent<colony>().amount;
@@ -84,12 +98,48 @@ public class waveSpawner : MonoBehaviour {
 			}
 		}
 	}
-
+	void setupPool(GameObject g, int howMany){
+		for (int i = 0; i < howMany; i++){
+			populate(g);
+		}
+	}
 	void createEnnemy(GameObject g, Vector2 pos){
 		waveCount++;
-		GameObject ennemy = (GameObject) Instantiate(g,pos, Quaternion.identity);
+		GameObject ennemy ;
+		if(objectPool[g].Count <= 0){
+			setupPool(g, 100);
+		}
+		ennemy = objectPool[g][0];
+		ennemy.transform.position = pos;
+		objectPool[g].RemoveAt(0);
+		ennemy.SetActive(true);
 		ennemy.GetComponent<colony>().level = ennemyLevel;
 		ennemy.GetComponent<colony>().center = center;
 		ennemy.GetComponent<colony>().waveSpawner = gameObject;
+		createdPool[g].Add(ennemy);
 	}
+
+    public GameObject populate(GameObject g){
+        Vector2 pos = new Vector2(0,0);
+        GameObject gO = (GameObject)Instantiate(g, pos, Quaternion.identity);
+        gO.SetActive(false);
+        objectPool[g].Add(gO);
+        return gO;
+    }
+
+    public void destroy(GameObject g)
+    {
+        g.SetActive(false);
+        objectPool[g].Add(g);
+    }
+
+    public void destroyAll(GameObject g)
+    {
+        for (int i = 0; i < createdPool[g].Count; i++){
+            GameObject destroyed = createdPool[g][0];
+            destroy(destroyed); 
+            createdPool[g].RemoveAt(0);
+            objectPool[g].Add(destroyed);
+        }
+    }
 }

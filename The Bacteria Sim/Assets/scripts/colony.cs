@@ -6,25 +6,34 @@ public class colony : MonoBehaviour {
 	public GameObject center;
 	public GameObject waveSpawner;
 	public int level;
+	
 	public float lifePoints = 15;
 	public float hpPerLevel = 2;
-	private float startSpeed;
+	public float maxHP = 150;
+	
+	float startSpeed;
 	public float speed = 1;
-	public int maxGroupNb = 10;
-	public float speedPerLevel = 0;
+	public float speedPerLevel = 0.2f;
+	public float maxSpeed = 25;
+	
 	public float armor = 0;
 	public float armorPerLevel = 0.5f;
+	public float maxArmor = 20;
+
 	public int amount = 5;
-	public int amountPerLevel = 3;
+	public int amountPerLevel = 3;		
+	public int maxGroupNb = 10;
+
 	public float money = 2;
 
 	// Use this for initialization
 	void Start () {
-		startSpeed = speed;
 		lifePoints += (hpPerLevel * level);
+		if(lifePoints > maxHP) lifePoints = maxHP;
 		speed += (speedPerLevel * level);
-		if (speed > startSpeed * 3) speed = startSpeed * 3;
+		if(speed > maxSpeed) speed = maxSpeed;
 		armor += (armorPerLevel * level);
+		if(armor > maxArmor) armor = maxArmor;
 		transform.localScale = new Vector3(lifePoints/10,lifePoints/10,1);
 	}
 	
