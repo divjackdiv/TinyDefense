@@ -82,11 +82,11 @@ public class gameManager : MonoBehaviour {
         else if(wasHoldingDown && currentGameObject != null){
             if (!isTaken(mousePos)){
                 currentGameObject.transform.position = nearestPoint(mousePos);
-                int x = (int)(Mathf.Round(mousePos.x)/Xstep);
-                int y = (int)(Mathf.Round(mousePos.y)/Ystep);
+                int x = (int)(Mathf.Round(mousePos.x/Xstep));
+                int y = (int)(Mathf.Round(mousePos.y/Ystep));
                 worldGrid[x][y] = currentGameObject;
-                x = (int)(Mathf.Ceil(oldPos.x)/Xstep);
-                y = (int)(Mathf.Ceil(oldPos.y)/Ystep);
+                x = (int)(Mathf.Round(oldPos.x/Xstep));
+                y = (int)(Mathf.Round(oldPos.y/Ystep));
                 worldGrid[x][y] = null;
                 oldPos = defaultNullPos;
             }
@@ -111,7 +111,7 @@ public class gameManager : MonoBehaviour {
         }
         else {
             if(currentGameObject != null) currentGameObject = null;
-        }    
+        } 
     }
 
     public void setupWorld(){
@@ -142,7 +142,6 @@ public class gameManager : MonoBehaviour {
             draggedObj = createTower(i, colors[currentColor]);
         }
         draggedObj.transform.position = mousePosition;
-        //Should probably play some wiggling animation
     }
 
     public void OnDrop(){
@@ -151,7 +150,7 @@ public class gameManager : MonoBehaviour {
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
         if (mousePosition.x < 0 || mousePosition.y < 0)  Destroy(draggedObj);
         Vector2 p = nearestPoint(mousePosition);
-        if (isTaken(p) || draggedObj.GetComponent<Turret>().cost > money)
+        if (isTaken(p) || draggedObj.GetComponent<Turret>().cost > money || EventSystem.current.IsPointerOverGameObject())
         {
             if(draggedObj != null) Destroy(draggedObj);
         }

@@ -146,15 +146,14 @@ public class waveSpawner : MonoBehaviour {
     public void destroy(GameObject g, bool killedByPlayer){
     	if (killedByPlayer){
     		gameManager.GetComponent<gameManager>().money += g.GetComponent<colony>().money;
-    		    		print(gameManager.GetComponent<gameManager>().money);
+    		if(createdPool[g.tag].Count == 0){
+    			gameManager.GetComponent<gameManager>().money += bonusMoney[g.tag];
+    		} 
     	}
     	else {
     		bonusMoney[g.tag] = 0;
     	}
     	createdPool[g.tag].RemoveAt(0);
-    	if(createdPool[g.tag].Count == 0){
-    		gameManager.GetComponent<gameManager>().money += bonusMoney[g.tag];
-    	} 
     	g.SetActive(false);
     	objectPool[g.tag].Add(g);
     	waveCount--;

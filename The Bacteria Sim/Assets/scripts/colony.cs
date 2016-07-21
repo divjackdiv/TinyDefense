@@ -8,6 +8,7 @@ public class colony : MonoBehaviour {
 	public GameObject center;
 	public GameObject waveSpawner;
 	public int level;
+	public Vector3 minScale;
 	public float lifePoints = 150;
 	public float hpPerLevel = 2;
 	public float maxHP = 1500;
@@ -30,8 +31,8 @@ public class colony : MonoBehaviour {
 		lifePoints += (hpPerLevel * level);
 		speed += (speedPerLevel * level);
 		if(speed > maxSpeed) speed = maxSpeed;
-		if(lifePoints > maxHP) transform.localScale = new Vector3(maxHP/100,maxHP/100,1);
-		else transform.localScale = new Vector3(lifePoints/100,lifePoints/100,1);
+		if(lifePoints > maxHP) transform.localScale = minScale + new Vector3(maxHP/100,maxHP/100,1);
+		else transform.localScale = minScale + new Vector3(lifePoints/100,lifePoints/100,1);
 	}
 	
 	// Update is called once per frame
@@ -50,8 +51,8 @@ public class colony : MonoBehaviour {
 
     void OnParticleCollision(GameObject other) {
 		List<bool> turretRes = other.transform.parent.GetComponent<Turret>().resistances;
-		for(int t = 0; t<turretRes.Count-1; t++){
-			if(turretRes[t] == true && resistances[t] == false){
+		for(int t = 0; t<turretRes.Count; t++){
+			if(turretRes[t] == true && resistances[t] != true){
 		    	lifePoints -= damageTakenByParticles;
 			    transform.localScale -= new Vector3(damageTakenByParticles/100,damageTakenByParticles/100,0);
 		    	return;
