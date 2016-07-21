@@ -50,7 +50,7 @@ public class colony : MonoBehaviour {
 
     void OnParticleCollision(GameObject other) {
 		List<bool> turretRes = other.transform.parent.GetComponent<Turret>().resistances;
-		for(int t = 0; t<turretRes.Count; t++){
+		for(int t = 0; t<turretRes.Count-1; t++){
 			if(turretRes[t] == true && resistances[t] == false){
 		    	lifePoints -= damageTakenByParticles;
 			    transform.localScale -= new Vector3(damageTakenByParticles/100,damageTakenByParticles/100,0);

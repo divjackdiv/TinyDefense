@@ -17,8 +17,11 @@ public class gameManager : MonoBehaviour {
     float Xstep;
     float Ystep;
 
-    //Related objects in the scene
+    //UI, Given more time I should probably export the ui to another script
     public GameObject canvas;
+    public GameObject moneyTextBox;
+
+    //Related objects in the scene
     public Camera camera;
     public GameObject center;
     public Vector3 cameraMacroPos;
@@ -116,9 +119,9 @@ public class gameManager : MonoBehaviour {
     }
 
     public void createGrid(int x, int y, float worldX, float worldY){
-        for (int i = 0; i < x; i++){
+        for (int i = 0; i <= x; i++){
             worldGrid.Add(new Dictionary<int, GameObject>());
-            for (int j = 0; j < y; j++){
+            for (int j = 0; j <= y; j++){
                 worldGrid[i].Add(j,null);
             }
         }
@@ -153,6 +156,7 @@ public class gameManager : MonoBehaviour {
             if(draggedObj != null) Destroy(draggedObj);
         }
         else{
+            money -= draggedObj.GetComponent<Turret>().cost;
             int x = (int)(Mathf.Round(p.x)/Xstep);
             int y = (int)(Mathf.Round(p.y)/Ystep);
             draggedObj.transform.position = p;
@@ -164,7 +168,7 @@ public class gameManager : MonoBehaviour {
     bool isTaken(Vector2 mousePosition){
         int x = (int)(Mathf.Round(mousePosition.x/Xstep));
         int y = (int)(Mathf.Round(mousePosition.y/Ystep));
-        if( x < 0 || y < 0 || x > worldGrid.Count || y > worldGrid[x].Count || worldGrid[x][y] != null) return true; 
+        if( x < 0 || y < 0 || x >= worldGrid.Count || y >= worldGrid[x].Count || worldGrid[x][y] != null) return true; 
         return false;
     }
 
@@ -198,5 +202,7 @@ public class gameManager : MonoBehaviour {
         currentColor = i;
     }
 
-
+    void OnGUI(){
+        moneyTextBox.GetComponent<Text>().text = "$$$ " +money;
+    }
 }

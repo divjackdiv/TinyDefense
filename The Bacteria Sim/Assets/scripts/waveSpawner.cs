@@ -10,7 +10,7 @@ public class waveSpawner : MonoBehaviour {
 	public GameObject center;
 	public GameObject gameManager;
 	public GameObject canvas;
-
+    public GameObject waveTextBox;
 	float widthOfWorld;
     float heightOfWorld;
 
@@ -39,9 +39,9 @@ public class waveSpawner : MonoBehaviour {
 		}
         //setup waves
 		waveCount = 0;
-    	typesOfEnnemies = (int) Mathf.Floor(waveNumber/3);
+    	typesOfEnnemies = (int) Mathf.Ceil(waveNumber/3.0f);
     	if (typesOfEnnemies > ennemies.Count) typesOfEnnemies = ennemies.Count; 
-    	ennemyLevel = (int) Mathf.Floor(waveNumber/5);
+    	ennemyLevel = (int) Mathf.Ceil(waveNumber/5);
 		widthOfWorld = gameManager.GetComponent<gameManager>().widthOfWorld;
 		heightOfWorld = gameManager.GetComponent<gameManager>().heightOfWorld;
 	}
@@ -51,6 +51,7 @@ public class waveSpawner : MonoBehaviour {
 		if (waveCount <= 0) {
 			upgradeWave();
 			createWave(typesOfEnnemies);
+			waveTextBox.GetComponent<Text>().text = "Vague " + waveNumber;
 			waveNumber++;
 		}
 	}
@@ -98,13 +99,13 @@ public class waveSpawner : MonoBehaviour {
 		for (int i = 0; i < typesOfEnnemies; i++){
 			int amount = ennemies[i].GetComponent<colony>().amount;
 			int maxGroupNb = ennemies[i].GetComponent<colony>().maxGroupNb;
-			amount += (ennemies[i].GetComponent<colony>().amountPerLevel * ennemyLevel);
+			amount += (ennemies[i].GetComponent<colony>().amountPerLevel * (ennemyLevel-1));
 			Vector2 randPos = getRandSpawnPoint();
 			GameObject createdEnnemy;
 			for (int j = 0; j < amount; j++){
 				if (j % maxGroupNb == 0 && j > 0) randPos = getRandSpawnPoint();
 				createdEnnemy = createEnnemy(ennemies[i], new Vector2 (randPos.x+(j*0.1f), randPos.y+(j*0.1f)));
-				if(j == amount) bonusMoney[ennemies[i].tag] = createdEnnemy.GetComponent<colony>().bonusForGroup;
+				if(j == 0) bonusMoney[ennemies[i].tag] = createdEnnemy.GetComponent<colony>().bonusForGroup;
 			}
 		}
 	}
@@ -127,7 +128,7 @@ public class waveSpawner : MonoBehaviour {
 		ennemy.GetComponent<colony>().center = center;
 		ennemy.GetComponent<colony>().waveSpawner = gameObject;
 		ennemy.GetComponent<colony>().gameManager = gameManager;
-		int i = Random.Range(0, colors.Count-1);
+		int i = Random.Range(0, colors.Count);
 		ennemy.GetComponent<colony>().resistances[i] = true;
 		ennemy.GetComponent<SpriteRenderer>().color = colors[i];
 		createdPool[g.tag].Add(ennemy);
@@ -145,13 +146,19 @@ public class waveSpawner : MonoBehaviour {
     public void destroy(GameObject g, bool killedByPlayer){
     	if (killedByPlayer){
     		gameManager.GetComponent<gameManager>().money += g.GetComponent<colony>().money;
+    		    		print(gameManager.GetComponent<gameManager>().money);
     	}
     	else {
     		bonusMoney[g.tag] = 0;
+    		print("not good");
     	}
-    	if(createdPool[g.tag].Count == 0) gameManager.GetComponent<gameManager>().money += bonusMoney[g.tag];
-    	g.SetActive(false);
     	createdPool[g.tag].RemoveAt(0);
+    	print(createdPool[g.tag].Count);
+    	if(createdPool[g.tag].Count == 0){
+    		print("here " + bonusMoney[g.tag]);
+    		gameManager.GetComponent<gameManager>().money += bonusMoney[g.tag];
+    	} 
+    	g.SetActive(false);
     	objectPool[g.tag].Add(g);
     	waveCount--;
     }

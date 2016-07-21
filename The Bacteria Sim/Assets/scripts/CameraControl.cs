@@ -24,19 +24,19 @@ public class CameraControl : MonoBehaviour
 	void Update () 
 	{
 //Horizontal et Vertical
-		if(Input.mousePosition.x < Screen.width / 15)
+		if(Input.mousePosition.x < Screen.width / 25)
 		{
 			transform.position += (Vector3.left * fov)/60;// 
 		}
-		if(Input.mousePosition.x > (Screen.width * 14) / 15)
+		if(Input.mousePosition.x > (Screen.width * 24) / 25)
 		{
 			transform.position += (Vector3.right* fov)/60;
 		}
-		if(Input.mousePosition.y < Screen.height / 15)
+		if(Input.mousePosition.y < Screen.height / 25)
 		{
 			transform.position += (Vector3.down * fov)/60;
 		}
-		if(Input.mousePosition.y > (Screen.height * 14) / 15)
+		if(Input.mousePosition.y > (Screen.height * 24) / 25)
 		{
 			transform.position += (Vector3.up * fov)/60;
 		}
