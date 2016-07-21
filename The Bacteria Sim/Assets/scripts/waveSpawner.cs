@@ -150,12 +150,9 @@ public class waveSpawner : MonoBehaviour {
     	}
     	else {
     		bonusMoney[g.tag] = 0;
-    		print("not good");
     	}
     	createdPool[g.tag].RemoveAt(0);
-    	print(createdPool[g.tag].Count);
     	if(createdPool[g.tag].Count == 0){
-    		print("here " + bonusMoney[g.tag]);
     		gameManager.GetComponent<gameManager>().money += bonusMoney[g.tag];
     	} 
     	g.SetActive(false);
