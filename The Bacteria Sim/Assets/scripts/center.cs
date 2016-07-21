@@ -1,18 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class center : MonoBehaviour {
 
 	public GameObject waveSpawner;
 	public int LifePoints = 10;
-	public int size = 2; //Number of rows and cols the center takes
-	// Use this for initialization
+	public int xSize = 2; //Number of rows and cols the center takes
+	public int ySize = 2;
+	private int currentSprite = 0;
+	public List<Sprite> sprites;
 
+	// Use this for initialization
 	void OnCollisionEnter2D(Collision2D collision) {
         LifePoints--;
-        waveSpawner.GetComponent<waveSpawner>().destroy(collision.gameObject,false);
+        currentSprite++;
+        if(sprites.Count > currentSprite){
+			GetComponent<SpriteRenderer>().sprite = sprites[currentSprite];
+        }
         if (LifePoints <= 0){
         	//Destroy(gameObject);
+        	GetComponent<SpriteRenderer>().sprite = null;	
         	print("GAME OVER");  
         }      
     }

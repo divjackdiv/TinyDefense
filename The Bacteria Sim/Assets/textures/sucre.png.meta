@@ -1,0 +1,317 @@
+fileFormatVersion: 2
+guid: 0e091774875f12a479261c5134d5c82b
+timeCreated: 1469112211
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: sucre_0
+    21300002: sucre_1
+    21300004: sucre_2
+    21300006: sucre_3
+    21300008: sucre_4
+    21300010: sucre_5
+    21300012: sucre_6
+    21300014: sucre_7
+    21300016: sucre_8
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: sucre_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1096
+        width: 546
+        height: 548
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 133, y: 0.25097656}
+        - {x: 61, y: 91.25098}
+        - {x: -38, y: 91.25098}
+        - {x: -79, y: 85.25098}
+        - {x: -75, y: 53.250977}
+        - {x: -127, y: 52.250977}
+        - {x: -134, y: 46.250977}
+        - {x: -134, y: -26.749023}
+        - {x: -67, y: -63.749023}
+        - {x: 39, y: -110.74902}
+        - {x: 47, y: -110.74902}
+        - {x: 52, y: -106.74902}
+        - {x: 100, y: -63.749023}
+        - {x: 133, y: -24.749023}
+    - name: sucre_1
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 1096
+        width: 546
+        height: 548
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 69, y: 71.25098}
+        - {x: 27, y: 88.25098}
+        - {x: -53, y: 88.25098}
+        - {x: -75, y: 81.25098}
+        - {x: -134, y: 47.250977}
+        - {x: -134, y: -26.749023}
+        - {x: -67, y: -63.749023}
+        - {x: 39, y: -110.74902}
+        - {x: 49, y: -110.74902}
+        - {x: 85, y: -85.74902}
+        - {x: 133, y: -21.749023}
+        - {x: 133, y: 18.250977}
+    - name: sucre_2
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 1096
+        width: 546
+        height: 548
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 34, y: 88.25098}
+        - {x: -53, y: 88.25098}
+        - {x: -76, y: 74.25098}
+        - {x: -134, y: 24.250977}
+        - {x: -134, y: -26.749023}
+        - {x: -69, y: -64.74902}
+        - {x: -9, y: -76.74902}
+        - {x: 34, y: -111.74902}
+        - {x: 48, y: -111.74902}
+        - {x: 84, y: -83.74902}
+        - {x: 133, y: -14.749023}
+        - {x: 133, y: 7.2509766}
+        - {x: 71, y: 70.25098}
+    - name: sucre_3
+      rect:
+        serializedVersion: 2
+        x: 1638
+        y: 1096
+        width: 546
+        height: 548
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 45, y: 88.25098}
+        - {x: -43, y: 88.25098}
+        - {x: -76, y: 84.25098}
+        - {x: -134, y: 20.250977}
+        - {x: -134, y: -26.749023}
+        - {x: -69, y: -64.74902}
+        - {x: -33, y: -64.74902}
+        - {x: 35, y: -111.74902}
+        - {x: 71, y: -111.74902}
+        - {x: 133, y: -39.749023}
+        - {x: 133, y: 4.2509766}
+        - {x: 77, y: 77.25098}
+    - name: sucre_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 548
+        width: 546
+        height: 548
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -85, y: 88.37549}
+        - {x: -134, y: 23.375488}
+        - {x: -134, y: -23.624512}
+        - {x: -130, y: -31.624512}
+        - {x: -102, y: -27.624512}
+        - {x: -73, y: -71.62451}
+        - {x: 10, y: -111.62451}
+        - {x: 58, y: -111.62451}
+        - {x: 133, y: -33.62451}
+        - {x: 133, y: 31.375488}
+        - {x: 80, y: 79.37549}
+        - {x: 67, y: 88.37549}
+    - name: sucre_5
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 548
+        width: 546
+        height: 548
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 133, y: 0.37548828}
+        - {x: 60, y: 88.37549}
+        - {x: -113, y: 88.37549}
+        - {x: -113, y: -110.62451}
+        - {x: 49, y: -110.62451}
+        - {x: 77, y: -89.62451}
+        - {x: 123, y: -32.62451}
+        - {x: 133, y: -13.624512}
+      - - {x: -131, y: 16.375488}
+        - {x: -128, y: 17.375488}
+        - {x: -128, y: 20.375488}
+        - {x: -131, y: 21.375488}
+        - {x: -133, y: 19.375488}
+    - name: sucre_6
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 548
+        width: 546
+        height: 548
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -69, y: 88.37549}
+        - {x: -104, y: 25.375488}
+        - {x: -104, y: -80.62451}
+        - {x: -74, y: -94.62451}
+        - {x: 87, y: -94.62451}
+        - {x: 96, y: -80.62451}
+        - {x: 96, y: 38.37549}
+        - {x: 61, y: 88.37549}
+    - name: sucre_7
+      rect:
+        serializedVersion: 2
+        x: 1638
+        y: 548
+        width: 546
+        height: 548
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -52, y: 70.37549}
+        - {x: -61, y: 66.37549}
+        - {x: -61, y: -14.624512}
+        - {x: -20, y: -43.62451}
+        - {x: 34, y: -43.62451}
+        - {x: 64, y: -9.624512}
+        - {x: 64, y: 37.37549}
+        - {x: 40, y: 70.37549}
+    - name: sucre_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 546
+        height: 548
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 64, y: -83}
+        - {x: 63, y: -86}
+        - {x: 60, y: -92}
+        - {x: 60, y: -94}
+        - {x: 61, y: -97}
+        - {x: 65, y: -97}
+        - {x: 74, y: -91}
+        - {x: 74, y: -85}
+        - {x: 69, y: -83}
+      - - {x: 0, y: -36}
+        - {x: 0, y: -44}
+        - {x: 2, y: -46}
+        - {x: 7, y: -46}
+        - {x: 10, y: -44}
+        - {x: 10, y: -38}
+        - {x: 6, y: -36}
+      - - {x: 128, y: -5}
+        - {x: 123, y: -13}
+        - {x: 123, y: -19}
+        - {x: 125, y: -20}
+        - {x: 130, y: -20}
+        - {x: 133, y: -15}
+        - {x: 133, y: -7}
+        - {x: 131, y: -5}
+      - - {x: -9, y: 57}
+        - {x: -39, y: 29}
+        - {x: -39, y: -19}
+        - {x: -12, y: -19}
+        - {x: 48, y: -4}
+        - {x: 48, y: 34}
+        - {x: 23, y: 57}
+      - - {x: -113, y: 22}
+        - {x: -113, y: 14}
+        - {x: -103, y: -3}
+        - {x: -102, y: -4}
+        - {x: -92, y: -4}
+        - {x: -92, y: 7}
+        - {x: -104, y: 22}
+      - - {x: -134, y: 15}
+        - {x: -133, y: 14}
+        - {x: -130, y: 14}
+        - {x: -127, y: 15}
+        - {x: -127, y: 19}
+        - {x: -128, y: 21}
+        - {x: -133, y: 21}
+        - {x: -134, y: 19}
+      - - {x: 104, y: 19}
+        - {x: 107, y: 20}
+        - {x: 107, y: 23}
+        - {x: 104, y: 24}
+        - {x: 102, y: 22}
+      - - {x: 70, y: 66}
+        - {x: 67, y: 66}
+        - {x: 61, y: 63}
+        - {x: 61, y: 55}
+        - {x: 72, y: 51}
+        - {x: 75, y: 51}
+        - {x: 77, y: 53}
+        - {x: 77, y: 59}
+        - {x: 76, y: 62}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -125,11 +125,12 @@ public class gameManager : MonoBehaviour {
                 worldGrid[i].Add(j,null);
             }
         }
-        int centerSize = center.GetComponent<center>().size;
+        int centerXSize = center.GetComponent<center>().xSize;
+        int centerYSize = center.GetComponent<center>().ySize;
         Vector2 centerPos = convertPosToGrid(center.transform.position);
-        for (int i = 0; i <= centerSize*2; i++){
-            for (int j = 0; j <= centerSize*2; j++){
-                worldGrid[(int)(centerPos.x)-centerSize+i][(int)(centerPos.y)-centerSize+j] = center;
+        for (int i = 0; i <= centerXSize*2; i++){
+            for (int j = 0; j <= centerYSize*2; j++){
+                worldGrid[(int)(centerPos.x)-centerXSize+i][(int)(centerPos.y)-centerYSize+j] = center;
             }
         }
     }
