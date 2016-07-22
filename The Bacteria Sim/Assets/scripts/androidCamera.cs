@@ -10,7 +10,6 @@ public class androidCamera : MonoBehaviour
 	//public GameObject dummy;
 	//dummy.GetComponent<Text>().text += "at  " + transform.position + " zooming towards " + pos;
 	public GameObject gameManager;
-	public float speed;
 
 	public float startFOV = 300;
 	public float maxFOV = 300;
@@ -28,10 +27,11 @@ public class androidCamera : MonoBehaviour
 	void Update () 
 	{
 //Horizontal et Vertical
+		if(gameManager.GetComponent<gameManager>().isDragging || gameManager.GetComponent<gameManager>().wasHoldingDown ) return;
 		if (Input.touchCount == 1 ) {
 			if (Input.GetTouch(0).phase == TouchPhase.Moved){
 				Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-            	transform.Translate(-touchDeltaPosition.x * speed * Time.deltaTime, -touchDeltaPosition.y * speed * Time.deltaTime, 0);
+            	transform.Translate(-touchDeltaPosition.x * fov * Time.deltaTime, -touchDeltaPosition.y * fov * Time.deltaTime, 0);
 			}
         }
 //Zoom et Dezoom

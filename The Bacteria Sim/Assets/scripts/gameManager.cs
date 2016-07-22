@@ -20,6 +20,8 @@ public class gameManager : MonoBehaviour {
     //UI, Given more time I should probably export the ui to another script
     public GameObject canvas;
     public GameObject moneyTextBox;
+    public GameObject turretsCanvas;
+    public int waveNumber;
 
     //Related objects in the scene
     public Camera camera;
@@ -29,21 +31,23 @@ public class gameManager : MonoBehaviour {
     //Dragging and dropping
     private GameObject currentGameObject;
     private GameObject draggedObj;
-    bool isDragging;
-    bool wasHoldingDown;
+    public bool isDragging;
+    public bool wasHoldingDown;
     Vector2 oldPos;
     Vector2 defaultNullPos;
 
     //Money
+    public int startMoney;
     public int money;
     //Tower Creation 
     public List<GameObject> basicTowers;
     public List<Color> colors;
     static int currentColor; 
+    List<GameObject> createdTowers;
 
     public void Start(){
+        createdTowers = new List<GameObject>();
         Application.targetFrameRate = 60;
-
         Xstep = widthOfWorld /widthOfGrid;
         Ystep = heightOfWorld / heightOfGrid;
         worldGrid = new List<Dictionary<int, GameObject>>();
@@ -53,6 +57,15 @@ public class gameManager : MonoBehaviour {
         isDragging = false;
         defaultNullPos = new Vector2(-1,-1);
         oldPos = defaultNullPos;
+        //Set UI prices
+        for (int i = 0; i < basicTowers.Count; i++){
+            turretsCanvas.transform.GetChild(i).GetChild(0).GetChild(0).GetComponent<Text>().text = basicTowers[i].GetComponent<Turret>().cost + "$";
+            turretsCanvas.transform.GetChild(i).GetChild(1).GetChild(0).GetComponent<Text>().text = basicTowers[i].GetComponent<Turret>().timeTillPerish +"";
+        }
+    }
+    public void clearGame(){
+        if(createdTowers != null) foreach(GameObject g in createdTowers) Destroy(g);
+        money = startMoney;
     }
     
     void LateUpdate () {
@@ -70,6 +83,8 @@ public class gameManager : MonoBehaviour {
                             wasHoldingDown = true;
                             currentGameObject = hit.collider.gameObject;
                             if (oldPos == defaultNullPos){
+                                ParticleSystem.CollisionModule coll = currentGameObject.transform.GetChild(0).GetComponent<ParticleSystem>().collision;
+                                coll.enabled = false;
                                 oldPos = currentGameObject.transform.position;
                             }
                         }
@@ -88,6 +103,8 @@ public class gameManager : MonoBehaviour {
                 x = (int)(Mathf.Round(oldPos.x/Xstep));
                 y = (int)(Mathf.Round(oldPos.y/Ystep));
                 worldGrid[x][y] = null;
+                ParticleSystem.CollisionModule coll = currentGameObject.transform.GetChild(0).GetComponent<ParticleSystem>().collision;
+                coll.enabled = true;
                 oldPos = defaultNullPos;
             }
             else {
@@ -142,6 +159,10 @@ public class gameManager : MonoBehaviour {
         if (draggedObj == null ){
             draggedObj = createTower(i, colors[currentColor]);
         }
+        MonoBehaviour[] scripts = draggedObj.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in scripts) script.enabled = false;
+        ParticleSystem.CollisionModule coll = draggedObj.transform.GetChild(0).GetComponent<ParticleSystem>().collision;
+        coll.enabled = false;
         draggedObj.transform.position = mousePosition;
     }
 
@@ -160,7 +181,12 @@ public class gameManager : MonoBehaviour {
             int x = (int)(Mathf.Round(p.x)/Xstep);
             int y = (int)(Mathf.Round(p.y)/Ystep);
             draggedObj.transform.position = p;
+            MonoBehaviour[] scripts = draggedObj.GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scripts) script.enabled = true;        
+            ParticleSystem.CollisionModule coll = draggedObj.transform.GetChild(0).GetComponent<ParticleSystem>().collision;
+            coll.enabled = true;
             worldGrid[x][y] = draggedObj;
+            createdTowers.Add(draggedObj);
         }
         draggedObj = null;
     }
@@ -199,10 +225,14 @@ public class gameManager : MonoBehaviour {
         g.transform.rotation  = Quaternion.Slerp(g.transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle)),1);
     }
     public void changeColor(int i){
+        if(waveNumber < 2 && i > 0) return;
+        else if(waveNumber < 3 && i > 1) return;
+        else if(waveNumber < 7 && i > 2) return;
         currentColor = i;
     }
 
     void OnGUI(){
-        moneyTextBox.GetComponent<Text>().text = "$$$ " +money;
+        moneyTextBox.GetComponent<Text>().text = "$ "+money;
+        turretsCanvas.GetComponent<Image>().color = colors[currentColor];
     }
 }
