@@ -24,19 +24,19 @@ public class CameraControl : MonoBehaviour
 	void Update () 
 	{
 //Horizontal et Vertical
-		if(Input.mousePosition.x < Screen.width / 25)
+		if(Input.GetAxis("Horizontal") < 0)
 		{
 			transform.position += (Vector3.left * fov)/60;// 
 		}
-		if(Input.mousePosition.x > (Screen.width * 24) / 25)
+		if(Input.GetAxis("Horizontal") > 0)
 		{
 			transform.position += (Vector3.right* fov)/60;
 		}
-		if(Input.mousePosition.y < Screen.height / 25)
+		if(Input.GetAxis("Vertical") < 0)
 		{
 			transform.position += (Vector3.down * fov)/60;
 		}
-		if(Input.mousePosition.y > (Screen.height * 24) / 25)
+		if(Input.GetAxis("Vertical") > 0)
 		{
 			transform.position += (Vector3.up * fov)/60;
 		}
