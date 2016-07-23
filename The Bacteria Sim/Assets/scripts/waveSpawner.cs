@@ -25,7 +25,7 @@ public class waveSpawner : MonoBehaviour {
     public List<GameObject> ennemies;
 
     public List<Color> colors;
-
+    private bool f = true;
     static public Dictionary<string , List<GameObject>> objectPool;
     static public Dictionary<string, List<GameObject>> createdPool;
 	// Use this for initialization
@@ -40,16 +40,6 @@ public class waveSpawner : MonoBehaviour {
 			bonusMoney.Add(ennemies[i].tag, 0);
 			setupPool(ennemies[i], 100);
 		}
-		restartGame();
-	}
-
-	public void restartGame(){
-		Time.timeScale = 1;
-		center.GetComponent<center>().LifePoints = 10;
-		center.GetComponent<center>().GetComponent<SpriteRenderer>().sprite = center.GetComponent<center>().GetComponent<center>().sprites[0];
-		restartGameButton.SetActive(false);
-		foreach(GameObject g in ennemies) destroyAll(g);
-		waveNumber = startWave;
 		typesOfEnnemies = (int) Mathf.Ceil(waveNumber/3.0f);
     	if (typesOfEnnemies > ennemies.Count) typesOfEnnemies = ennemies.Count; 
     	ennemyLevel = (int) Mathf.Ceil(waveNumber/5);
@@ -58,12 +48,34 @@ public class waveSpawner : MonoBehaviour {
 		if(waveNumber < 2) antibios.transform.GetChild(1).GetComponent<Image>().color = Color.black;
 		if(waveNumber < 7) antibios.transform.GetChild(2).GetComponent<Image>().color = Color.black;
 		if(waveNumber < 11) antibios.transform.GetChild(3).GetComponent<Image>().color = Color.black;
-		gameManager.GetComponent<gameManager>().clearGame();
 	}
+	public void restartGame(){
+		Application.LoadLevel(Application.loadedLevel);
+	}
+	/*public void restartGame(){
+
+		Time.timeScale = 1;
+		center.GetComponent<center>().currentSprite = 0;
+		center.GetComponent<center>().LifePoints = 10;
+		center.GetComponent<center>().GetComponent<SpriteRenderer>().sprite = center.GetComponent<center>().GetComponent<center>().sprites[0];
+		//restartGameButton.SetActive(false);
+		destroyAll();
+		waveNumber = startWave;
+		typesOfEnnemies = (int) Mathf.Ceil(waveNumber/3.0f);
+    	if (typesOfEnnemies > ennemies.Count) typesOfEnnemies = ennemies.Count; 
+    	ennemyLevel = (int) Mathf.Ceil(waveNumber/5);
+		widthOfWorld = gameManager.GetComponent<gameManager>().widthOfWorld;
+		heightOfWorld = gameManager.GetComponent<gameManager>().heightOfWorld;
+		//if(waveNumber < 2) antibios.transform.GetChild(1).GetComponent<Image>().color = Color.black;
+		//if(waveNumber < 7) antibios.transform.GetChild(2).GetComponent<Image>().color = Color.black;
+		//if(waveNumber < 11) antibios.transform.GetChild(3).GetComponent<Image>().color = Color.black;
+		//gameManager.GetComponent<gameManager>().clearGame();
+	}*/
 	
 	// Update is called once per frame
 	void Update () {
-		if (waveCount <= 0) {
+		if (waveCount <= 0 && f==true) {
+	//		f = false;
 			upgradeWave();
 			createWave(typesOfEnnemies);
 			waveTextBox.GetComponent<Text>().text = "Vague " + waveNumber;
@@ -104,10 +116,8 @@ public class waveSpawner : MonoBehaviour {
 		if(waveNumber%3 == 0){
 			if (typesOfEnnemies < ennemies.Count){
 				typesOfEnnemies++;
+				ennemyLevel++;
 			}
-		}
-		if(waveNumber%5 == 1){
-			ennemyLevel++;
 		}
 	}
 
@@ -115,14 +125,17 @@ public class waveSpawner : MonoBehaviour {
 		for (int i = 0; i < typesOfEnnemies; i++){
 			int amount = ennemies[i].GetComponent<colony>().amount;
 			int maxGroupNb = ennemies[i].GetComponent<colony>().maxGroupNb;
-			amount += (ennemies[i].GetComponent<colony>().amountPerLevel * (ennemyLevel-1));
+			amount += (ennemies[i].GetComponent<colony>().amountPerLevel * (ennemyLevel));
 			Vector2 randPos = getRandSpawnPoint();
 			GameObject createdEnnemy;
+			Debug.Log("amount " + amount);
 			for (int j = 0; j < amount; j++){
 				if (j % maxGroupNb == 0 && j > 0) randPos = getRandSpawnPoint();
-				createdEnnemy = createEnnemy(ennemies[i], new Vector2 (randPos.x+(j*0.1f), randPos.y+(j*0.1f)));
+				createdEnnemy = createEnnemy(i, new Vector2 (randPos.x+(j*0.1f), randPos.y+(j*0.1f)));
 				if(j == 0) bonusMoney[ennemies[i].tag] = createdEnnemy.GetComponent<colony>().bonusForGroup;
 			}
+			Debug.Log(ennemies[i].tag);
+			Debug.Log("createdPool " + createdPool[ennemies[i].tag].Count);
 		}
 	}
 	void setupPool(GameObject g, int howMany){
@@ -130,8 +143,9 @@ public class waveSpawner : MonoBehaviour {
 			populate(g);
 		}
 	}
-	GameObject createEnnemy(GameObject g, Vector2 pos){
+	GameObject createEnnemy(int h, Vector2 pos){
 		waveCount++;
+		GameObject g = ennemies[h];
 		GameObject ennemy ;
 		if(objectPool[g.tag].Count <= 0){
 			setupPool(g, 100);
@@ -158,9 +172,10 @@ public class waveSpawner : MonoBehaviour {
 			antibios.transform.GetChild(1).GetComponent<Image>().color = colors[1];
 		}
 		else i = 1;
+		Debug.Log("hi " + g.tag);
 		ennemy.GetComponent<colony>().resistances[i] = true;
 		ennemy.GetComponent<SpriteRenderer>().color = colors[i];
-		createdPool[g.tag].Add(ennemy);
+		createdPool[ennemy.tag].Add(ennemy);
 		return ennemy;
 	}
 
@@ -182,18 +197,31 @@ public class waveSpawner : MonoBehaviour {
     	else {
     		bonusMoney[g.tag] = 0;
     	}
+    	print(createdPool[g.tag].Count);
     	createdPool[g.tag].RemoveAt(0);
+    	print(createdPool[g.tag].Count);
     	g.SetActive(false);
+    	print(objectPool.Count);
     	objectPool[g.tag].Add(g);
+    	print(objectPool.Count);
+    	print("activity " + g.activeSelf);
     	waveCount--;
     }
 
-    public void destroyAll(GameObject g)
+    public void destroyAll()
     {
-    	int c = createdPool[g.tag].Count;
-        for (int i = 0; i < c; i++){
-            GameObject destroyed = createdPool[g.tag][0];
-            destroy(destroyed, false);
-        }        
+    	foreach (string s in createdPool.Keys){
+    		print("Available tags : " + s);
+    	}
+    	for (int j = 0; j < ennemies.Count; j++){
+    		string tag = ennemies[j].tag;
+    		print("tag " + tag);
+    		print("tag Count " + createdPool[tag].Count);
+	        for (int i = 0; i < createdPool[tag].Count;){
+	            GameObject destroyed = createdPool[tag][0];
+	            destroy(destroyed, false);
+	        }      
+	        print("cleared? " + createdPool[tag].Count);
+    	} 
     }
 }

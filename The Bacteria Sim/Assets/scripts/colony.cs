@@ -37,7 +37,7 @@ public class colony : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (lifePoints <= 0.5) waveSpawner.GetComponent<waveSpawner>().destroy(gameObject, true);
+		if (lifePoints <= 0.5 || transform.localScale.x < minScale.x) waveSpawner.GetComponent<waveSpawner>().destroy(gameObject, true);
 		objLookAt(gameObject, center.transform.position);
 		transform.Translate(Vector2.right * Time.deltaTime * speed);
 	}
@@ -61,7 +61,8 @@ public class colony : MonoBehaviour {
     }
     void OnCollisionEnter2D(Collision2D collision) {
 		if(collision.transform.tag == "Center"){
-			waveSpawner.GetComponent<waveSpawner>().destroy(gameObject,false);
+			print("here");
+			waveSpawner.GetComponent<waveSpawner>().destroy(gameObject, false);
 		}     
     }
 

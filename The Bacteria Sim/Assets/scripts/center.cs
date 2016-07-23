@@ -9,7 +9,7 @@ public class center : MonoBehaviour {
 	public int LifePoints = 10;
 	public int xSize = 2; //Number of rows and cols the center takes
 	public int ySize = 2;
-	private int currentSprite = 0;
+	public int currentSprite = 0;
 	public List<Sprite> sprites;
 
 	// Use this for initialization

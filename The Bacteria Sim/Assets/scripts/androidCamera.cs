@@ -31,7 +31,7 @@ public class androidCamera : MonoBehaviour
 		if (Input.touchCount == 1 ) {
 			if (Input.GetTouch(0).phase == TouchPhase.Moved){
 				Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-            	transform.Translate(-touchDeltaPosition.x * fov * Time.deltaTime, -touchDeltaPosition.y * fov * Time.deltaTime, 0);
+            	transform.Translate(-touchDeltaPosition.x * (fov/2) * Time.deltaTime, -touchDeltaPosition.y * fov * Time.deltaTime, 0);
 			}
         }
 //Zoom et Dezoom
@@ -73,10 +73,10 @@ public class androidCamera : MonoBehaviour
 	}
 
 	void zoomTowards(Vector3 pos, float direction){
-		Camera.main.orthographicSize += direction*10;
-		fov += direction * 10;
+		Camera.main.orthographicSize += direction*5;
+		fov += direction * 5;
 		Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, minFOV, maxFOV);			
-		float multiplier = (10f / Camera.main.orthographicSize);		
+		float multiplier = (5 / Camera.main.orthographicSize);		
 		transform.position += (pos - transform.position) * multiplier;
 	}
 
