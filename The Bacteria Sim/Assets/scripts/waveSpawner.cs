@@ -50,6 +50,7 @@ public class waveSpawner : MonoBehaviour {
 		if(waveNumber < 11) antibios.transform.GetChild(3).GetComponent<Image>().color = Color.black;
 	}
 	public void restartGame(){
+		Time.timeScale = 1;
 		Application.LoadLevel(Application.loadedLevel);
 	}
 	/*public void restartGame(){
