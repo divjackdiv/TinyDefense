@@ -22,7 +22,6 @@ public class center : MonoBehaviour {
         if (LifePoints <= 0){
         	stopGame();
         	GetComponent<SpriteRenderer>().sprite = null;	
-        	print("GAME OVER");  
         }      
     }
     void stopGame(){

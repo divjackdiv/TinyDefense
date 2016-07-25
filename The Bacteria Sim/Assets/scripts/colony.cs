@@ -9,7 +9,8 @@ public class colony : MonoBehaviour {
 	public GameObject waveSpawner;
 	public int level;
 	public Vector3 minScale;
-	public float lifePoints = 150;
+	public float startingLifePoints = 150;
+	float lifePoints;
 	public float hpPerLevel = 2;
 	public float maxHP = 1500;
 	public List<bool> resistances;
@@ -27,14 +28,14 @@ public class colony : MonoBehaviour {
 	public int bonusForGroup;
 
 	// Use this for initialization
-	void Start () {
-		lifePoints += (hpPerLevel * level);
+	public void startingStats(int lvl){
+		level = lvl;
+		lifePoints = startingLifePoints + (hpPerLevel * level);
 		speed += (speedPerLevel * level);
 		if(speed > maxSpeed) speed = maxSpeed;
 		if(lifePoints > maxHP) transform.localScale = minScale + new Vector3(maxHP/100,maxHP/100,1);
 		else transform.localScale = minScale + new Vector3(lifePoints/100,lifePoints/100,1);
 	}
-	
 	// Update is called once per frame
 	void Update () {
 		if (lifePoints <= 0.5 || transform.localScale.x < minScale.x) waveSpawner.GetComponent<waveSpawner>().destroy(gameObject, true);
@@ -50,6 +51,7 @@ public class colony : MonoBehaviour {
     }
 
     void OnParticleCollision(GameObject other) {
+    	print("wtf");
 		List<bool> turretRes = other.transform.parent.GetComponent<Turret>().resistances;
 		for(int t = 0; t<turretRes.Count; t++){
 			if(turretRes[t] == true && resistances[t] != true){
@@ -61,7 +63,6 @@ public class colony : MonoBehaviour {
     }
     void OnCollisionEnter2D(Collision2D collision) {
 		if(collision.transform.tag == "Center"){
-			print("here");
 			waveSpawner.GetComponent<waveSpawner>().destroy(gameObject, false);
 		}     
     }

@@ -44,8 +44,10 @@ public class gameManager : MonoBehaviour {
     public List<Color> colors;
     static int currentColor; 
     List<GameObject> createdTowers;
+    int layermask ;
 
     public void Start(){
+        layermask = ~(1 << 11);
         createdTowers = new List<GameObject>();
         Application.targetFrameRate = 60;
         Xstep = widthOfWorld /widthOfGrid;
@@ -63,9 +65,10 @@ public class gameManager : MonoBehaviour {
             turretsCanvas.transform.GetChild(i).GetChild(1).GetChild(0).GetComponent<Text>().text = basicTowers[i].GetComponent<Turret>().timeTillPerish +"";
         }
     }
-    public void clearGame(){
-        if(createdTowers != null) foreach(GameObject g in createdTowers) Destroy(g);
-        money = startMoney;
+    public void restartGame(){
+        Time.timeScale = 1;
+        changeColor(0);
+        Application.LoadLevel(Application.loadedLevel);
     }
     
     void LateUpdate () {
@@ -76,7 +79,7 @@ public class gameManager : MonoBehaviour {
                 currentGameObject.transform.position = mousePos;
             }
             else{
-                RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+                RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, layermask);
                 if (hit){
                     if (hit.collider != null){
                         if (hit.collider.tag == "Turret"){
@@ -116,15 +119,17 @@ public class gameManager : MonoBehaviour {
         }
         else if (Input.GetButton("Fire2") && !isDragging){
             if (currentGameObject != null) objLookAt(currentGameObject, mousePos);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-            if (hit){
-                if (hit.collider != null){
-                    if (hit.collider.tag == "Turret"){
-                        currentGameObject = hit.collider.gameObject;
-                    }
+            else{
+                RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, layermask);
+                if (hit){
+                    if (hit.collider != null){
+                        if (hit.collider.tag == "Turret"){
+                            currentGameObject = hit.collider.gameObject;
+                        }
 
+                    }
                 }
-            }
+            }           
         }
         else {
             if(currentGameObject != null) currentGameObject = null;
@@ -170,7 +175,6 @@ public class gameManager : MonoBehaviour {
         isDragging = false;
         Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-        if (mousePosition.x < 0 || mousePosition.y < 0)  Destroy(draggedObj);
         Vector2 p = nearestPoint(mousePosition);
         if (isTaken(p) || draggedObj.GetComponent<Turret>().cost > money || EventSystem.current.IsPointerOverGameObject())
         {

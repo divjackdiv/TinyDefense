@@ -13,8 +13,8 @@ public class waveSpawner : MonoBehaviour {
 	public GameObject restartGameButton;
 	public GameObject antibios;
     public GameObject waveTextBox;
-	float widthOfWorld;
-    float heightOfWorld;
+    float widthOfGridRatio;
+    float heightOfGridRatio;
 
     public int waveCount;
     public int startWave;
@@ -25,12 +25,14 @@ public class waveSpawner : MonoBehaviour {
     public List<GameObject> ennemies;
 
     public List<Color> colors;
-    private bool f = true;
     static public Dictionary<string , List<GameObject>> objectPool;
     static public Dictionary<string, List<GameObject>> createdPool;
 	// Use this for initialization
 	void Start () {
+		waveNumber = startWave;
 		//Setup the Object Pool
+		widthOfGridRatio = transform.localScale.x/gameManager.GetComponent<gameManager>().widthOfWorld;
+		heightOfGridRatio = transform.localScale.y/gameManager.GetComponent<gameManager>().heightOfWorld;
 		objectPool = new Dictionary<string, List<GameObject>>();
 		createdPool = new Dictionary<string, List<GameObject>>();
 		bonusMoney = new Dictionary<string, int>();
@@ -38,47 +40,17 @@ public class waveSpawner : MonoBehaviour {
 			objectPool.Add(ennemies[i].tag, new List<GameObject>());
 			createdPool.Add(ennemies[i].tag, new List<GameObject>());
 			bonusMoney.Add(ennemies[i].tag, 0);
-			setupPool(ennemies[i], 100);
+			setupPool(ennemies[i], 8);
 		}
-		typesOfEnnemies = (int) Mathf.Ceil(waveNumber/3.0f);
-    	if (typesOfEnnemies > ennemies.Count) typesOfEnnemies = ennemies.Count; 
-    	ennemyLevel = (int) Mathf.Ceil(waveNumber/5);
-		widthOfWorld = gameManager.GetComponent<gameManager>().widthOfWorld;
-		heightOfWorld = gameManager.GetComponent<gameManager>().heightOfWorld;
 		if(waveNumber < 2) antibios.transform.GetChild(1).GetComponent<Image>().color = Color.black;
 		if(waveNumber < 7) antibios.transform.GetChild(2).GetComponent<Image>().color = Color.black;
 		if(waveNumber < 11) antibios.transform.GetChild(3).GetComponent<Image>().color = Color.black;
 	}
-	public void restartGame(){
-		Time.timeScale = 1;
-		Application.LoadLevel(Application.loadedLevel);
-	}
-	/*public void restartGame(){
-
-		Time.timeScale = 1;
-		center.GetComponent<center>().currentSprite = 0;
-		center.GetComponent<center>().LifePoints = 10;
-		center.GetComponent<center>().GetComponent<SpriteRenderer>().sprite = center.GetComponent<center>().GetComponent<center>().sprites[0];
-		//restartGameButton.SetActive(false);
-		destroyAll();
-		waveNumber = startWave;
-		typesOfEnnemies = (int) Mathf.Ceil(waveNumber/3.0f);
-    	if (typesOfEnnemies > ennemies.Count) typesOfEnnemies = ennemies.Count; 
-    	ennemyLevel = (int) Mathf.Ceil(waveNumber/5);
-		widthOfWorld = gameManager.GetComponent<gameManager>().widthOfWorld;
-		heightOfWorld = gameManager.GetComponent<gameManager>().heightOfWorld;
-		//if(waveNumber < 2) antibios.transform.GetChild(1).GetComponent<Image>().color = Color.black;
-		//if(waveNumber < 7) antibios.transform.GetChild(2).GetComponent<Image>().color = Color.black;
-		//if(waveNumber < 11) antibios.transform.GetChild(3).GetComponent<Image>().color = Color.black;
-		//gameManager.GetComponent<gameManager>().clearGame();
-	}*/
 	
 	// Update is called once per frame
 	void Update () {
-		if (waveCount <= 0 && f==true) {
-	//		f = false;
-			upgradeWave();
-			createWave(typesOfEnnemies);
+		if (waveCount <= 0) {
+			createWave();
 			waveTextBox.GetComponent<Text>().text = "Vague " + waveNumber;
 			gameManager.GetComponent<gameManager>().waveNumber = waveNumber;
 			waveNumber++;
@@ -92,51 +64,48 @@ public class waveSpawner : MonoBehaviour {
 		float xScale = transform.localScale.x;
 		float yScale = transform.localScale.y;
 		//south
+		float displacement = (float) waveNumber;
 		if (mainDir == 0){
-			x = Random.Range(transform.position.x - (xScale/2), transform.position.x + (widthOfWorld/2));
-			y = Random.Range(transform.position.y - (yScale/2), transform.position.x - (heightOfWorld/2));
+			if (displacement > xScale/heightOfGridRatio) displacement = xScale/heightOfGridRatio;
+			x = Random.Range(transform.position.x - (xScale/widthOfGridRatio), transform.position.x + (yScale/widthOfGridRatio));
+			y = transform.position.x - (xScale/heightOfGridRatio) - displacement;
 		}
 		//east
 		else if (mainDir == 1){
-			x = Random.Range(transform.position.x + (widthOfWorld/2), transform.position.x + (xScale/2));
-			y = Random.Range(transform.position.y - (yScale/2), transform.position.y + (heightOfWorld/2));
+			if (displacement > yScale/widthOfGridRatio) displacement = yScale/widthOfGridRatio;
+			x = transform.position.x + (yScale/widthOfGridRatio) + displacement;
+			y = Random.Range(transform.position.y - (yScale/xScale), transform.position.y + (xScale/heightOfGridRatio));
 		}
 		//north
 		else if (mainDir == 2){
-			x = Random.Range(transform.position.x - (widthOfWorld/2), transform.position.x + (xScale/2));
-			y = Random.Range(transform.position.x + (heightOfWorld/2), transform.position.y + (yScale/2));
+			if (displacement > xScale/heightOfGridRatio) displacement = xScale/heightOfGridRatio;
+			x = Random.Range(transform.position.x - (yScale/widthOfGridRatio), transform.position.x + (xScale/widthOfGridRatio));
+			y = transform.position.y + (xScale/heightOfGridRatio) + displacement;
 		}
 		//west
 		else if (mainDir == 3){
-			x = Random.Range(transform.position.x - (xScale/2), transform.position.y - (widthOfWorld/2));
-			y = Random.Range(transform.position.y - (heightOfWorld/2), transform.position.y + (yScale/2));
+			if (displacement > yScale/widthOfGridRatio) displacement = yScale/3;
+			x = transform.position.y - (yScale/widthOfGridRatio) - displacement;
+			y = Random.Range(transform.position.y - (xScale/heightOfGridRatio), transform.position.y + (yScale/xScale));
 		}
 		return new Vector2(x,y);
 	}
-	void upgradeWave(){
-		if(waveNumber%3 == 0){
-			if (typesOfEnnemies < ennemies.Count){
-				typesOfEnnemies++;
-				ennemyLevel++;
-			}
-		}
-	}
 
-	void createWave(int typesOfEnnemies){
+	void createWave(){
+		typesOfEnnemies = (int) Mathf.Ceil(waveNumber/3.0f);
+    	if (typesOfEnnemies > ennemies.Count) typesOfEnnemies = ennemies.Count; 
+    	ennemyLevel = (int) Mathf.Ceil(waveNumber/5);
 		for (int i = 0; i < typesOfEnnemies; i++){
-			int amount = ennemies[i].GetComponent<colony>().amount;
+			int amount = ennemies[i].GetComponent<colony>().amount;			
 			int maxGroupNb = ennemies[i].GetComponent<colony>().maxGroupNb;
 			amount += (ennemies[i].GetComponent<colony>().amountPerLevel * (ennemyLevel));
 			Vector2 randPos = getRandSpawnPoint();
 			GameObject createdEnnemy;
-			Debug.Log("amount " + amount);
 			for (int j = 0; j < amount; j++){
 				if (j % maxGroupNb == 0 && j > 0) randPos = getRandSpawnPoint();
 				createdEnnemy = createEnnemy(i, new Vector2 (randPos.x+(j*0.1f), randPos.y+(j*0.1f)));
 				if(j == 0) bonusMoney[ennemies[i].tag] = createdEnnemy.GetComponent<colony>().bonusForGroup;
 			}
-			Debug.Log(ennemies[i].tag);
-			Debug.Log("createdPool " + createdPool[ennemies[i].tag].Count);
 		}
 	}
 	void setupPool(GameObject g, int howMany){
@@ -148,17 +117,20 @@ public class waveSpawner : MonoBehaviour {
 		waveCount++;
 		GameObject g = ennemies[h];
 		GameObject ennemy ;
+		print(objectPool[g.tag].Count);
 		if(objectPool[g.tag].Count <= 0){
-			setupPool(g, 100);
+			//setupPool(g, 100);
 		}
 		ennemy = objectPool[g.tag][0];
-		ennemy.transform.position = pos;
 		objectPool[g.tag].RemoveAt(0);
-		ennemy.SetActive(true);
-		ennemy.GetComponent<colony>().level = ennemyLevel;
+		ennemy.transform.position = pos;
+		MonoBehaviour[] scripts = ennemy.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in scripts) script.enabled = true;
+		ennemy.GetComponent<colony>().startingStats(ennemyLevel);
 		ennemy.GetComponent<colony>().center = center;
 		ennemy.GetComponent<colony>().waveSpawner = gameObject;
 		ennemy.GetComponent<colony>().gameManager = gameManager;
+		ennemy.SetActive(true);
 		int i;
 		if(waveNumber > 10){
 			i = Random.Range(0, 4);
@@ -173,7 +145,6 @@ public class waveSpawner : MonoBehaviour {
 			antibios.transform.GetChild(1).GetComponent<Image>().color = colors[1];
 		}
 		else i = 1;
-		Debug.Log("hi " + g.tag);
 		ennemy.GetComponent<colony>().resistances[i] = true;
 		ennemy.GetComponent<SpriteRenderer>().color = colors[i];
 		createdPool[ennemy.tag].Add(ennemy);
@@ -198,31 +169,13 @@ public class waveSpawner : MonoBehaviour {
     	else {
     		bonusMoney[g.tag] = 0;
     	}
-    	print(createdPool[g.tag].Count);
-    	createdPool[g.tag].RemoveAt(0);
-    	print(createdPool[g.tag].Count);
+        MonoBehaviour[] scripts = g.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in scripts) script.enabled = false;
     	g.SetActive(false);
-    	print(objectPool.Count);
-    	objectPool[g.tag].Add(g);
-    	print(objectPool.Count);
-    	print("activity " + g.activeSelf);
+    	objectPool[g.tag].Add(createdPool[g.tag][0]);
+    	print("g " + createdPool[g.tag][0]);
+    	print("added " + objectPool[g.tag][objectPool[g.tag].Count -1] );
+    	createdPool[g.tag].RemoveAt(0);
     	waveCount--;
-    }
-
-    public void destroyAll()
-    {
-    	foreach (string s in createdPool.Keys){
-    		print("Available tags : " + s);
-    	}
-    	for (int j = 0; j < ennemies.Count; j++){
-    		string tag = ennemies[j].tag;
-    		print("tag " + tag);
-    		print("tag Count " + createdPool[tag].Count);
-	        for (int i = 0; i < createdPool[tag].Count;){
-	            GameObject destroyed = createdPool[tag][0];
-	            destroy(destroyed, false);
-	        }      
-	        print("cleared? " + createdPool[tag].Count);
-    	} 
     }
 }
