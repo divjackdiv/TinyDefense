@@ -107,6 +107,15 @@ public class waveSpawner : MonoBehaviour {
 				if(j == 0) bonusMoney[ennemies[i].tag] = createdEnnemy.GetComponent<colony>().bonusForGroup;
 			}
 		}
+		if(waveNumber > 10){
+			antibios.transform.GetChild(3).GetComponent<Image>().color = colors[3];
+		} 
+		else if(waveNumber > 6){
+			antibios.transform.GetChild(2).GetComponent<Image>().color = colors[2];
+		}
+		else if(waveNumber > 1){
+			antibios.transform.GetChild(1).GetComponent<Image>().color = colors[1];
+		}
 	}
 	void setupPool(GameObject g, int howMany){
 		for (int i = 0; i < howMany; i++){
@@ -117,9 +126,8 @@ public class waveSpawner : MonoBehaviour {
 		waveCount++;
 		GameObject g = ennemies[h];
 		GameObject ennemy ;
-		print(objectPool[g.tag].Count);
 		if(objectPool[g.tag].Count <= 0){
-			//setupPool(g, 100);
+			setupPool(g, 100);
 		}
 		ennemy = objectPool[g.tag][0];
 		objectPool[g.tag].RemoveAt(0);
@@ -127,26 +135,7 @@ public class waveSpawner : MonoBehaviour {
 		MonoBehaviour[] scripts = ennemy.GetComponents<MonoBehaviour>();
         foreach (MonoBehaviour script in scripts) script.enabled = true;
 		ennemy.GetComponent<colony>().startingStats(ennemyLevel);
-		ennemy.GetComponent<colony>().center = center;
-		ennemy.GetComponent<colony>().waveSpawner = gameObject;
-		ennemy.GetComponent<colony>().gameManager = gameManager;
 		ennemy.SetActive(true);
-		int i;
-		if(waveNumber > 10){
-			i = Random.Range(0, 4);
-			antibios.transform.GetChild(3).GetComponent<Image>().color = colors[3];
-		} 
-		else if(waveNumber > 6){
-			i = Random.Range(0, 3);
-			antibios.transform.GetChild(2).GetComponent<Image>().color = colors[2];
-		}
-		else if(waveNumber > 1){
-			i = Random.Range(0, 2);
-			antibios.transform.GetChild(1).GetComponent<Image>().color = colors[1];
-		}
-		else i = 1;
-		ennemy.GetComponent<colony>().resistances[i] = true;
-		ennemy.GetComponent<SpriteRenderer>().color = colors[i];
 		createdPool[ennemy.tag].Add(ennemy);
 		return ennemy;
 	}
@@ -155,6 +144,7 @@ public class waveSpawner : MonoBehaviour {
         Vector2 pos = new Vector2(0,0);
         GameObject gO = (GameObject)Instantiate(g, pos, Quaternion.identity);
         gO.SetActive(false);
+        gO.GetComponent<colony>().setVariables(gameManager, center, gameObject, colors);
         objectPool[g.tag].Add(gO);
         return gO;
     }
@@ -173,8 +163,6 @@ public class waveSpawner : MonoBehaviour {
         foreach (MonoBehaviour script in scripts) script.enabled = false;
     	g.SetActive(false);
     	objectPool[g.tag].Add(createdPool[g.tag][0]);
-    	print("g " + createdPool[g.tag][0]);
-    	print("added " + objectPool[g.tag][objectPool[g.tag].Count -1] );
     	createdPool[g.tag].RemoveAt(0);
     	waveCount--;
     }

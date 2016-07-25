@@ -4,9 +4,6 @@ using System.Collections.Generic;
 
 public class colony : MonoBehaviour {
 
-	public GameObject gameManager;
-	public GameObject center;
-	public GameObject waveSpawner;
 	public int level;
 	public Vector3 minScale;
 	public float startingLifePoints = 150;
@@ -26,7 +23,10 @@ public class colony : MonoBehaviour {
 	public float damageTakenByParticles = 0.5f;
 	public int money = 2;
 	public int bonusForGroup;
-
+	GameObject gameManager;
+	GameObject center;
+	GameObject waveSpawner;
+    List<Color> colors;
 	// Use this for initialization
 	public void startingStats(int lvl){
 		level = lvl;
@@ -35,6 +35,30 @@ public class colony : MonoBehaviour {
 		if(speed > maxSpeed) speed = maxSpeed;
 		if(lifePoints > maxHP) transform.localScale = minScale + new Vector3(maxHP/100,maxHP/100,1);
 		else transform.localScale = minScale + new Vector3(lifePoints/100,lifePoints/100,1);
+		int waveNumber = waveSpawner.GetComponent<waveSpawner>().waveNumber;
+		int i;
+		if(waveNumber > 10){
+			i = Random.Range(0, 4);
+		} 
+		else if(waveNumber > 6){
+			i = Random.Range(0, 3);
+		}
+		else if(waveNumber > 1){
+			i = Random.Range(0, 2);
+		}
+		else i = 1;
+		for(int j = 0; j < resistances.Count; j++){
+			if(j == i) resistances[j] = true;
+			else resistances[j] = false;
+		}
+		GetComponent<SpriteRenderer>().color = colors[i];
+	}
+	
+	public void setVariables(GameObject gm, GameObject c, GameObject ws, List<Color> cols){
+		gameManager = gm;
+		center = c;
+		waveSpawner = ws;
+		colors = cols;
 	}
 	// Update is called once per frame
 	void Update () {
@@ -51,7 +75,6 @@ public class colony : MonoBehaviour {
     }
 
     void OnParticleCollision(GameObject other) {
-    	print("wtf");
 		List<bool> turretRes = other.transform.parent.GetComponent<Turret>().resistances;
 		for(int t = 0; t<turretRes.Count; t++){
 			if(turretRes[t] == true && resistances[t] != true){
