@@ -13,6 +13,8 @@ public class waveSpawner : MonoBehaviour {
 	public GameObject restartGameButton;
 	public GameObject antibios;
     public GameObject waveTextBox;
+    public AudioSource soundManager;
+    public List<AudioClip> sounds;  // 0 is ennemy death;  1 is new wave ; 2 is bonus money
     float widthOfGridRatio;
     float heightOfGridRatio;
 
@@ -116,6 +118,7 @@ public class waveSpawner : MonoBehaviour {
 		else if(waveNumber > 1){
 			antibios.transform.GetChild(1).GetComponent<Image>().color = colors[1];
 		}
+    	soundManager.PlayOneShot(sounds[1]);
 	}
 	void setupPool(GameObject g, int howMany){
 		for (int i = 0; i < howMany; i++){
@@ -151,8 +154,10 @@ public class waveSpawner : MonoBehaviour {
 
     public void destroy(GameObject g, bool killedByPlayer){
     	if (killedByPlayer){
+    		soundManager.PlayOneShot(sounds[0]);
     		gameManager.GetComponent<gameManager>().money += g.GetComponent<colony>().money;
     		if(createdPool[g.tag].Count <= 1){
+    			soundManager.PlayOneShot(sounds[2]);
     			gameManager.GetComponent<gameManager>().money += bonusMoney[g.tag];
     		} 
     	}

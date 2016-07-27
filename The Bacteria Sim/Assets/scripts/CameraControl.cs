@@ -6,7 +6,10 @@ public class CameraControl : MonoBehaviour
 	float tempX;
 	float tempY;
 	public GameObject gameManager;
-
+	public float leftLimit;
+	public float rightLimit;
+	public float highLimit;
+	public float lowLimit;
 	public float startFOV = 300;
 	public float maxFOV = 300;
 	public float minFOV = 30;
@@ -24,19 +27,19 @@ public class CameraControl : MonoBehaviour
 	void Update () 
 	{
 //Horizontal et Vertical
-		if(Input.GetAxis("Horizontal") < 0)
+		if(Input.GetAxis("Horizontal") < 0 && transform.position.x > leftLimit)
 		{
 			transform.position += (Vector3.left * fov)/60;// 
 		}
-		if(Input.GetAxis("Horizontal") > 0)
+		if(Input.GetAxis("Horizontal") > 0 && transform.position.x < rightLimit)
 		{
 			transform.position += (Vector3.right* fov)/60;
 		}
-		if(Input.GetAxis("Vertical") < 0)
+		if(Input.GetAxis("Vertical") < 0 && transform.position.y > lowLimit)
 		{
 			transform.position += (Vector3.down * fov)/60;
 		}
-		if(Input.GetAxis("Vertical") > 0)
+		if(Input.GetAxis("Vertical") > 0  && transform.position.y < highLimit)
 		{
 			transform.position += (Vector3.up * fov)/60;
 		}
@@ -64,7 +67,11 @@ public class CameraControl : MonoBehaviour
 		Camera.main.orthographicSize += direction*10;
 		fov += direction * 10;
 		Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, minFOV, maxFOV);			
-		float multiplier = (10f / Camera.main.orthographicSize);		
+		float multiplier = (10f / Camera.main.orthographicSize);	
+		if(pos.x < leftLimit) pos.x = leftLimit;
+		else if(pos.x > rightLimit) pos.x = rightLimit;
+		if(pos.y < lowLimit) pos.y = lowLimit;
+		else if(pos.y > highLimit) pos.y = highLimit;
 		transform.position += (pos - transform.position) * multiplier;
 	}
 }

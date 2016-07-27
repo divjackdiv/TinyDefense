@@ -27,7 +27,7 @@ public class androidCamera : MonoBehaviour
 	void Update () 
 	{
 //Horizontal et Vertical
-		if(gameManager.GetComponent<gameManager>().isDragging || gameManager.GetComponent<gameManager>().wasHoldingDown ) return;
+		if(gameManager.GetComponent<gameManager>().creatingTurret || gameManager.GetComponent<gameManager>().wasHoldingDown ) return;
 		if (Input.touchCount == 1 ) {
 			if (Input.GetTouch(0).phase == TouchPhase.Moved){
 				Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;

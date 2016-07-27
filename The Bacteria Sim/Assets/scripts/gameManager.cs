@@ -30,8 +30,8 @@ public class gameManager : MonoBehaviour {
 
     //Dragging and dropping
     private GameObject currentGameObject;
-    private GameObject draggedObj;
-    public bool isDragging;
+    private int currentTurret;
+    public bool creatingTurret;
     public bool wasHoldingDown;
     Vector2 oldPos;
     Vector2 defaultNullPos;
@@ -45,6 +45,11 @@ public class gameManager : MonoBehaviour {
     static int currentColor; 
     List<GameObject> createdTowers;
     int layermask ;
+    int i = 0;
+    private  GameObject turret;
+    //Sound 
+    public AudioSource soundManager;
+    public List<AudioClip> sounds; //0 is tower death; 1 is tower pick up; 2 is drop; 3 is drop did not work; 4 change color; 5 is cancel
 
     public void Start(){
         layermask = ~(1 << 11);
@@ -55,8 +60,9 @@ public class gameManager : MonoBehaviour {
         worldGrid = new List<Dictionary<int, GameObject>>();
         setupWorld();
 
+        currentTurret = -1;
+        creatingTurret = false;
         wasHoldingDown = false;
-        isDragging = false;
         defaultNullPos = new Vector2(-1,-1);
         oldPos = defaultNullPos;
         //Set UI prices
@@ -73,51 +79,68 @@ public class gameManager : MonoBehaviour {
     
     void LateUpdate () {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //Drag an already existing GameObject
-        if (Input.GetButton("Fire1") && !isDragging){
-            if (currentGameObject != null){
-                currentGameObject.transform.position = mousePos;
+        if (Input.GetButtonDown("Fire1")){
+            if (creatingTurret){
+                creatingTurret = false;
+                turret = createTower(currentTurret, colors[currentColor]);
+                Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+                mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+                Vector2 p = nearestPoint(mousePosition);
+                if (isTaken(p) || turret.GetComponent<Turret>().cost > money || EventSystem.current.IsPointerOverGameObject())
+                {
+                    if (EventSystem.current.IsPointerOverGameObject()) soundManager.PlayOneShot(sounds[5]); 
+                    else  soundManager.PlayOneShot(sounds[3]); 
+                    if(turret != null) Destroy(turret);
+                }
+                else{
+                    money -= turret.GetComponent<Turret>().cost;
+                    int x = (int)(Mathf.Round(p.x)/Xstep);
+                    int y = (int)(Mathf.Round(p.y)/Ystep);
+                    turret.transform.position = p;
+                    MonoBehaviour[] scripts = turret.GetComponents<MonoBehaviour>();
+                    foreach (MonoBehaviour script in scripts) script.enabled = true;        
+                    worldGrid[x][y] = turret;
+                    createdTowers.Add(turret);
+                    soundManager.PlayOneShot(sounds[2]); 
+                }
             }
-            else{
+            else if(wasHoldingDown && currentGameObject != null){
+                if (!isTaken(mousePos)){
+                    currentGameObject.transform.position = nearestPoint(mousePos);
+                    int x = (int)(Mathf.Round(mousePos.x/Xstep));
+                    int y = (int)(Mathf.Round(mousePos.y/Ystep));
+                    worldGrid[x][y] = currentGameObject;
+                    x = (int)(Mathf.Round(oldPos.x/Xstep));
+                    y = (int)(Mathf.Round(oldPos.y/Ystep));
+                    worldGrid[x][y] = null;
+                    oldPos = defaultNullPos;
+                }
+                else {
+                    soundManager.PlayOneShot(sounds[3]); 
+                    currentGameObject.transform.position = oldPos;
+                    oldPos = defaultNullPos;
+                }
+                currentGameObject = null;
+                wasHoldingDown = false;
+            }
+            else {
                 RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, layermask);
                 if (hit){
                     if (hit.collider != null){
                         if (hit.collider.tag == "Turret"){
-                            wasHoldingDown = true;
                             currentGameObject = hit.collider.gameObject;
+                            wasHoldingDown = true;
                             if (oldPos == defaultNullPos){
-                                ParticleSystem.CollisionModule coll = currentGameObject.transform.GetChild(0).GetComponent<ParticleSystem>().collision;
-                                coll.enabled = false;
+                                soundManager.PlayOneShot(sounds[1]); 
                                 oldPos = currentGameObject.transform.position;
                             }
                         }
-
                     }
                 }
             }
         }
-        //DROP
-        else if(wasHoldingDown && currentGameObject != null){
-            if (!isTaken(mousePos)){
-                currentGameObject.transform.position = nearestPoint(mousePos);
-                int x = (int)(Mathf.Round(mousePos.x/Xstep));
-                int y = (int)(Mathf.Round(mousePos.y/Ystep));
-                worldGrid[x][y] = currentGameObject;
-                x = (int)(Mathf.Round(oldPos.x/Xstep));
-                y = (int)(Mathf.Round(oldPos.y/Ystep));
-                worldGrid[x][y] = null;
-                ParticleSystem.CollisionModule coll = currentGameObject.transform.GetChild(0).GetComponent<ParticleSystem>().collision;
-                coll.enabled = true;
-                oldPos = defaultNullPos;
-            }
-            else {
-                currentGameObject.transform.position = oldPos;
-                oldPos = defaultNullPos;
-            }
-            currentGameObject = null;
-            wasHoldingDown = false;
-        }
-        else if (Input.GetButton("Fire2") && !isDragging){
+    
+        else if (Input.GetButton("Fire2")){
             if (currentGameObject != null) objLookAt(currentGameObject, mousePos);
             else{
                 RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, layermask);
@@ -131,9 +154,6 @@ public class gameManager : MonoBehaviour {
                 }
             }           
         }
-        else {
-            if(currentGameObject != null) currentGameObject = null;
-        } 
     }
 
     public void setupWorld(){
@@ -157,42 +177,16 @@ public class gameManager : MonoBehaviour {
         }
     }
 
-    public void OnDrag (int i){ 
-        isDragging = true;
-        Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-        if (draggedObj == null ){
-            draggedObj = createTower(i, colors[currentColor]);
-        }
-        MonoBehaviour[] scripts = draggedObj.GetComponents<MonoBehaviour>();
-        foreach (MonoBehaviour script in scripts) script.enabled = false;
-        ParticleSystem.CollisionModule coll = draggedObj.transform.GetChild(0).GetComponent<ParticleSystem>().collision;
-        coll.enabled = false;
-        draggedObj.transform.position = mousePosition;
-    }
-
-    public void OnDrop(){
-        isDragging = false;
-        Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-        Vector2 p = nearestPoint(mousePosition);
-        if (isTaken(p) || draggedObj.GetComponent<Turret>().cost > money || EventSystem.current.IsPointerOverGameObject())
-        {
-            if(draggedObj != null) Destroy(draggedObj);
+    public void changeTurret(int i){
+        if(i == currentTurret && creatingTurret) {
+            soundManager.PlayOneShot(sounds[5]); 
+            creatingTurret = false;
         }
         else{
-            money -= draggedObj.GetComponent<Turret>().cost;
-            int x = (int)(Mathf.Round(p.x)/Xstep);
-            int y = (int)(Mathf.Round(p.y)/Ystep);
-            draggedObj.transform.position = p;
-            MonoBehaviour[] scripts = draggedObj.GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour script in scripts) script.enabled = true;        
-            ParticleSystem.CollisionModule coll = draggedObj.transform.GetChild(0).GetComponent<ParticleSystem>().collision;
-            coll.enabled = true;
-            worldGrid[x][y] = draggedObj;
-            createdTowers.Add(draggedObj);
+            creatingTurret = true;
+            soundManager.PlayOneShot(sounds[1]);
+            currentTurret = i;
         }
-        draggedObj = null;
     }
 
     bool isTaken(Vector2 mousePosition){
@@ -219,6 +213,8 @@ public class gameManager : MonoBehaviour {
         tower.GetComponent<SpriteRenderer>().color = col; 
         tower.transform.GetChild(0).GetComponent<ParticleSystem>().startColor = col; 
         tower.GetComponent<Turret>().resistances[currentColor] = true;
+        tower.GetComponent<Turret>().soundManager = soundManager;
+        tower.GetComponent<Turret>().dyingSound = sounds[0];       
         tower.GetComponent<Rigidbody2D>().isKinematic = true;
         return tower;
     }
@@ -232,6 +228,8 @@ public class gameManager : MonoBehaviour {
         if(waveNumber < 2 && i > 0) return;
         else if(waveNumber < 3 && i > 1) return;
         else if(waveNumber < 7 && i > 2) return;
+        if (currentColor == i) return;
+        soundManager.PlayOneShot(sounds[4]);
         currentColor = i;
     }
 

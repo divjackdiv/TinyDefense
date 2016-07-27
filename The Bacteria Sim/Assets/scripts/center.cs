@@ -11,9 +11,12 @@ public class center : MonoBehaviour {
 	public int ySize = 2;
 	public int currentSprite = 0;
 	public List<Sprite> sprites;
+    public AudioSource soundManager;
+    public AudioClip looseHealthSound; 
 
 	// Use this for initialization
 	void OnCollisionEnter2D(Collision2D collision) {
+        soundManager.PlayOneShot(looseHealthSound); 
         LifePoints--;
         currentSprite++;
         if(sprites.Count > currentSprite){

@@ -8,6 +8,8 @@ public class Turret : MonoBehaviour {
 	public float timeTillPerish;
 	private float time;
 	public int cost;
+	public AudioSource soundManager;
+    public AudioClip dyingSound;
 	// Use this for initialization
 	void Start () {	
 	}
@@ -16,8 +18,9 @@ public class Turret : MonoBehaviour {
 	void Update () {
 		time += Time.deltaTime;
 		if(time>timeTillPerish){
-				transform.GetChild(0).gameObject.SetActive(false);
-				Destroy(gameObject);
-			} 
+			soundManager.PlayOneShot(dyingSound);
+			transform.GetChild(0).gameObject.SetActive(false);
+			Destroy(gameObject);
+		} 
 	}
 }
