@@ -14,6 +14,10 @@ public class androidCamera : MonoBehaviour
 	public float startFOV = 300;
 	public float maxFOV = 300;
 	public float minFOV = 30;
+	public float leftLimit;
+	public float rightLimit;
+	public float highLimit;
+	public float lowLimit;
 	private float fov;
 	public bool rotating;
 	private GameObject currentColony;
@@ -31,7 +35,9 @@ public class androidCamera : MonoBehaviour
 		if (Input.touchCount == 1 ) {
 			if (Input.GetTouch(0).phase == TouchPhase.Moved){
 				Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-            	transform.Translate(-touchDeltaPosition.x * (fov/2) * Time.deltaTime, -touchDeltaPosition.y * fov * Time.deltaTime, 0);
+				//float x = Mathf.Clamp(touchDeltaPosition.x * (fov), leftLimit, rightLimit);
+            	//float y = Mathf.Clamp(touchDeltaPosition.y * (fov), lowLimit, highLimit);
+            	transform.Translate( -touchDeltaPosition.x * (fov)/2 * Time.deltaTime, -touchDeltaPosition.y * (fov)/2 * Time.deltaTime, 0);
 			}
         }
 //Zoom et Dezoom
@@ -60,7 +66,6 @@ public class androidCamera : MonoBehaviour
 	            if (deltaMagnitudeDiff < 0)
 				{
 					if(fov > minFOV){
-						
 						zoomTowards(middlePos, -1);
 					}
 				}
@@ -75,10 +80,14 @@ public class androidCamera : MonoBehaviour
 	}
 
 	void zoomTowards(Vector3 pos, float direction){
-		Camera.main.orthographicSize += direction*5;
-		fov += direction * 5;
+		Camera.main.orthographicSize += direction*10;
+		fov += direction * 10;
 		Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, minFOV, maxFOV);			
-		float multiplier = (5 / Camera.main.orthographicSize);		
+		float multiplier = (10f / Camera.main.orthographicSize);
+		if(pos.x < leftLimit) pos.x = leftLimit;
+		else if(pos.x > rightLimit) pos.x = rightLimit;
+		if(pos.y < lowLimit) pos.y = lowLimit;
+		else if(pos.y > highLimit) pos.y = highLimit;
 		transform.position += (pos - transform.position) * multiplier;
 	}
 

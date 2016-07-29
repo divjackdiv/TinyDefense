@@ -54,9 +54,7 @@ public class colony : MonoBehaviour {
 	void Update () {
 		if (lifePoints < startingLifePoints/5 && !hasMutated){
 			int m = Random.Range(0, chanceToMutate);
-			print("m " + m + " and " + chanceToMutate);
-			if (m > chanceToMutate - 1){
-				print("here");
+			if (m >= chanceToMutate - 1){
 				int waveNumber = waveSpawner.GetComponent<waveSpawner>().waveNumber;
 				mutate(waveNumber-1);
 				hasMutated = true;
@@ -86,7 +84,6 @@ public class colony : MonoBehaviour {
 			if(j == i) resistances[j] = true;
 			else resistances[j] = false;
 		}
-		//print("mutated");
 		GetComponent<SpriteRenderer>().color = colors[i];
 	}
 

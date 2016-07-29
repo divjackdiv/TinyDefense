@@ -26,6 +26,7 @@ public class gameManager : MonoBehaviour {
 
     //Dragging and dropping
     private GameObject currentGameObject;
+    private GameObject rotatingObj;
     public int currentTurret;
     public bool creatingTurret;
     public bool wasHoldingDown;
@@ -72,15 +73,16 @@ public class gameManager : MonoBehaviour {
     void LateUpdate () {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetButtonDown("Fire1")){
+
             if (creatingTurret){
                 creatingTurret = false;
                 turret = createTower(currentTurret, colors[currentColor]);
                 Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
                 mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
                 Vector2 p = nearestPoint(mousePosition);
-                if (isTaken(p) || turret.GetComponent<Turret>().cost > money || EventSystem.current.IsPointerOverGameObject())
+                if (isTaken(p) || turret.GetComponent<Turret>().cost > money || EventSystem.current.IsPointerOverGameObject(0))
                 {
-                    if (!EventSystem.current.IsPointerOverGameObject()) {
+                    if (!EventSystem.current.IsPointerOverGameObject(0)) {
                         soundManager.PlayOneShot(sounds[3]);
                         userInterface.GetComponent<UserInterface>().showError(Camera.main.ScreenToWorldPoint(Input.mousePosition));
                     }
@@ -97,7 +99,26 @@ public class gameManager : MonoBehaviour {
                     createdTowers.Add(turret);
                     soundManager.PlayOneShot(sounds[2]); 
                 }
-            }
+            }           
+           /* else if (Input.touchCount == 2){
+                if (rotatingObj != null){
+                    objLookAt(rotatingObj, Input.GetTouch(1).position);
+                    camera.GetComponent<androidCamera>().rotating = true;
+                } 
+                else{
+                    RaycastHit2D hit = Physics2D.Raycast(Input.GetTouch(0).position, Vector2.zero, Mathf.Infinity, layermask);
+                    if (hit){
+                        if (hit.collider != null){
+                            if (hit.collider.tag == "Turret"){
+                                soundManager.PlayOneShot(sounds[4]);
+                                rotatingObj = hit.collider.gameObject;
+                            }
+
+                        }
+                    }
+                    else camera.GetComponent<androidCamera>().rotating = false;
+                }     
+            }    */
             else if(wasHoldingDown && currentGameObject != null){
                 if (!isTaken(mousePos)){
                     currentGameObject.transform.position = nearestPoint(mousePos);
@@ -135,23 +156,26 @@ public class gameManager : MonoBehaviour {
                 }
             }
         }
-    
-        else if (Input.touchCount == 2){
-            if (currentGameObject != null){
-                objLookAt(currentGameObject, Input.GetTouch(1).position);
+        else if (Input.GetButton("Fire2")){
+            if (rotatingObj != null){
+                objLookAt(rotatingObj, mousePos);
                 camera.GetComponent<androidCamera>().rotating = true;
             } 
             else{
-                RaycastHit2D hit = Physics2D.Raycast(Input.GetTouch(0).position, Vector2.zero, Mathf.Infinity, layermask);
+                RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, layermask);
                 if (hit){
                     if (hit.collider != null){
                         if (hit.collider.tag == "Turret"){
-                            currentGameObject = hit.collider.gameObject;
+                            rotatingObj = hit.collider.gameObject;
                         }
 
                     }
                 }
             }           
+        }
+        else {
+            rotatingObj = null;
+            camera.GetComponent<androidCamera>().rotating = false;
         }
     }
 
@@ -209,6 +233,6 @@ public class gameManager : MonoBehaviour {
         pos.x = pos.x - g.transform.position.x;
         pos.y = pos.y - g.transform.position.y;
         float angle = (int) (Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg);
-        g.transform.rotation  = Quaternion.Slerp(g.transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle+90)),1);
+        g.transform.rotation  = Quaternion.Slerp(g.transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle-90)),1);
     }
 }
