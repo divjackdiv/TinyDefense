@@ -21,6 +21,7 @@ public class center : MonoBehaviour {
         currentSprite++;
         if(sprites.Count > currentSprite){
 			GetComponent<SpriteRenderer>().sprite = sprites[currentSprite];
+            //GetComponent<Collider2D>().Reset();
         }
         if (LifePoints <= 0){
         	stopGame();

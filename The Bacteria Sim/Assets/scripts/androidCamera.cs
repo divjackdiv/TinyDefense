@@ -15,7 +15,7 @@ public class androidCamera : MonoBehaviour
 	public float maxFOV = 300;
 	public float minFOV = 30;
 	private float fov;
-
+	public bool rotating;
 	private GameObject currentColony;
 
 	void Start () 
@@ -39,37 +39,39 @@ public class androidCamera : MonoBehaviour
 		if (Input.touchCount == 2)
         {
             // Store both touches.
-            Touch touchZero = Input.GetTouch(0);
-            Touch touchOne = Input.GetTouch(1);
+            if (!rotating){
+            	Touch touchZero = Input.GetTouch(0);
+	            Touch touchOne = Input.GetTouch(1);
 
-            // Find the position in the previous frame of each touch.
-            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+	            // Find the position in the previous frame of each touch.
+	            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+	            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
 
-            // Find the magnitude of the vector (the distance) between the touches in each frame.
-            float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-            float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+	            // Find the magnitude of the vector (the distance) between the touches in each frame.
+	            float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+	            float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
 
-            // Find the difference in the distances between each frame.
-            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+	            // Find the difference in the distances between each frame.
+	            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-            Vector2 mPos = (touchZeroPrevPos - touchOnePrevPos)/2 + touchOnePrevPos;
-            Vector3 middlePos =  Camera.main.ScreenToWorldPoint(mPos);
+	            Vector2 mPos = (touchZeroPrevPos - touchOnePrevPos)/2 + touchOnePrevPos;
+	            Vector3 middlePos =  Camera.main.ScreenToWorldPoint(mPos);
 
-            if (deltaMagnitudeDiff < 0)
-			{
-				if(fov > minFOV){
-					
-					zoomTowards(middlePos, -1);
+	            if (deltaMagnitudeDiff < 0)
+				{
+					if(fov > minFOV){
+						
+						zoomTowards(middlePos, -1);
+					}
 				}
+				else if(deltaMagnitudeDiff > 0)
+				{	
+					if(fov < maxFOV){
+						zoomTowards(middlePos, 1);
+					}
+				}  
 			}
-			else if(deltaMagnitudeDiff > 0)
-			{	
-				if(fov < maxFOV){
-					zoomTowards(middlePos, 1);
-				}
-			}  
-		}
+            }
 	}
 
 	void zoomTowards(Vector3 pos, float direction){

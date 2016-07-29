@@ -49,11 +49,15 @@
      <Compile Include="Assets\scripts\CameraDragger.cs" />
      <Compile Include="Assets\scripts\ModifyTurret.cs" />
      <Compile Include="Assets\scripts\Turret.cs" />
+     <Compile Include="Assets\scripts\UserInterface.cs" />
      <Compile Include="Assets\scripts\androidCamera.cs" />
      <Compile Include="Assets\scripts\center.cs" />
      <Compile Include="Assets\scripts\colony.cs" />
      <Compile Include="Assets\scripts\gameManager.cs" />
+     <Compile Include="Assets\scripts\warning.cs" />
      <Compile Include="Assets\scripts\waveSpawner.cs" />
+     <Compile Include="Assets\scripts\waviness.cs" />
+     <None Include="Assets\Shaders\wavy3.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

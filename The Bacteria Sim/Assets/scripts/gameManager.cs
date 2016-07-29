@@ -17,20 +17,16 @@ public class gameManager : MonoBehaviour {
     float Xstep;
     float Ystep;
 
-    //UI, Given more time I should probably export the ui to another script
-    public GameObject canvas;
-    public GameObject moneyTextBox;
-    public GameObject turretsCanvas;
-    public int waveNumber;
 
     //Related objects in the scene
     public Camera camera;
     public GameObject center;
     public Vector3 cameraMacroPos;
+    public GameObject userInterface;
 
     //Dragging and dropping
     private GameObject currentGameObject;
-    private int currentTurret;
+    public int currentTurret;
     public bool creatingTurret;
     public bool wasHoldingDown;
     Vector2 oldPos;
@@ -39,17 +35,17 @@ public class gameManager : MonoBehaviour {
     //Money
     public int startMoney;
     public int money;
+
     //Tower Creation 
     public List<GameObject> basicTowers;
     public List<Color> colors;
-    static int currentColor; 
+    public int currentColor; 
     List<GameObject> createdTowers;
-    int layermask ;
-    int i = 0;
+    int layermask;
     private  GameObject turret;
     //Sound 
     public AudioSource soundManager;
-    public List<AudioClip> sounds; //0 is tower death; 1 is tower pick up; 2 is drop; 3 is drop did not work; 4 change color; 5 is cancel
+    public List<AudioClip> sounds; //0 is tower death; 1 is tower pick up; 2 is drop; 3 is drop did not work;
 
     public void Start(){
         layermask = ~(1 << 11);
@@ -65,15 +61,11 @@ public class gameManager : MonoBehaviour {
         wasHoldingDown = false;
         defaultNullPos = new Vector2(-1,-1);
         oldPos = defaultNullPos;
-        //Set UI prices
-        for (int i = 0; i < basicTowers.Count; i++){
-            turretsCanvas.transform.GetChild(i).GetChild(0).GetChild(0).GetComponent<Text>().text = basicTowers[i].GetComponent<Turret>().cost + "$";
-            turretsCanvas.transform.GetChild(i).GetChild(1).GetChild(0).GetComponent<Text>().text = basicTowers[i].GetComponent<Turret>().timeTillPerish +"";
-        }
+        
     }
     public void restartGame(){
         Time.timeScale = 1;
-        changeColor(0);
+        userInterface.GetComponent<UserInterface>().changeColor(0);
         Application.LoadLevel(Application.loadedLevel);
     }
     
@@ -88,8 +80,10 @@ public class gameManager : MonoBehaviour {
                 Vector2 p = nearestPoint(mousePosition);
                 if (isTaken(p) || turret.GetComponent<Turret>().cost > money || EventSystem.current.IsPointerOverGameObject())
                 {
-                    if (EventSystem.current.IsPointerOverGameObject()) soundManager.PlayOneShot(sounds[5]); 
-                    else  soundManager.PlayOneShot(sounds[3]); 
+                    if (!EventSystem.current.IsPointerOverGameObject()) {
+                        soundManager.PlayOneShot(sounds[3]);
+                        userInterface.GetComponent<UserInterface>().showError(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                    }
                     if(turret != null) Destroy(turret);
                 }
                 else{
@@ -114,8 +108,10 @@ public class gameManager : MonoBehaviour {
                     y = (int)(Mathf.Round(oldPos.y/Ystep));
                     worldGrid[x][y] = null;
                     oldPos = defaultNullPos;
+                    soundManager.PlayOneShot(sounds[2]);
                 }
                 else {
+                    userInterface.GetComponent<UserInterface>().showError(Camera.main.ScreenToWorldPoint(Input.mousePosition));
                     soundManager.PlayOneShot(sounds[3]); 
                     currentGameObject.transform.position = oldPos;
                     oldPos = defaultNullPos;
@@ -140,10 +136,13 @@ public class gameManager : MonoBehaviour {
             }
         }
     
-        else if (Input.GetButton("Fire2")){
-            if (currentGameObject != null) objLookAt(currentGameObject, mousePos);
+        else if (Input.touchCount == 2){
+            if (currentGameObject != null){
+                objLookAt(currentGameObject, Input.GetTouch(1).position);
+                camera.GetComponent<androidCamera>().rotating = true;
+            } 
             else{
-                RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, layermask);
+                RaycastHit2D hit = Physics2D.Raycast(Input.GetTouch(0).position, Vector2.zero, Mathf.Infinity, layermask);
                 if (hit){
                     if (hit.collider != null){
                         if (hit.collider.tag == "Turret"){
@@ -174,18 +173,6 @@ public class gameManager : MonoBehaviour {
             for (int j = 0; j <= centerYSize*2; j++){
                 worldGrid[(int)(centerPos.x)-centerXSize+i][(int)(centerPos.y)-centerYSize+j] = center;
             }
-        }
-    }
-
-    public void changeTurret(int i){
-        if(i == currentTurret && creatingTurret) {
-            soundManager.PlayOneShot(sounds[5]); 
-            creatingTurret = false;
-        }
-        else{
-            creatingTurret = true;
-            soundManager.PlayOneShot(sounds[1]);
-            currentTurret = i;
         }
     }
 
@@ -222,19 +209,6 @@ public class gameManager : MonoBehaviour {
         pos.x = pos.x - g.transform.position.x;
         pos.y = pos.y - g.transform.position.y;
         float angle = (int) (Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg);
-        g.transform.rotation  = Quaternion.Slerp(g.transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle)),1);
-    }
-    public void changeColor(int i){
-        if(waveNumber < 2 && i > 0) return;
-        else if(waveNumber < 3 && i > 1) return;
-        else if(waveNumber < 7 && i > 2) return;
-        if (currentColor == i) return;
-        soundManager.PlayOneShot(sounds[4]);
-        currentColor = i;
-    }
-
-    void OnGUI(){
-        moneyTextBox.GetComponent<Text>().text = "$ "+money;
-        turretsCanvas.GetComponent<Image>().color = colors[currentColor];
+        g.transform.rotation  = Quaternion.Slerp(g.transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle+90)),1);
     }
 }

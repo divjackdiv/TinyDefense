@@ -1,0 +1,351 @@
+fileFormatVersion: 2
+guid: 9b72c0a3100b45b41a1e4f5ed2bb7a31
+timeCreated: 1469712124
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: cubesheet_0
+    21300002: cubesheet_1
+    21300004: cubesheet_2
+    21300006: cubesheet_3
+    21300008: cubesheet_4
+    21300010: cubesheet_5
+    21300012: cubesheet_6
+    21300014: cubesheet_7
+    21300016: cubesheet_8
+    21300018: cubesheet_9
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: cubesheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 398
+        width: 528.2
+        height: 398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 137, y: -101}
+        - {x: 146, y: -87}
+        - {x: 173, y: -15}
+        - {x: 167, y: 4}
+        - {x: 184, y: 79}
+        - {x: 184, y: 98}
+        - {x: 169, y: 108}
+        - {x: 146, y: 112}
+        - {x: 58, y: 142}
+        - {x: 10, y: 155}
+        - {x: -16, y: 155}
+        - {x: -26, y: 136}
+        - {x: -104, y: 92}
+        - {x: -111, y: 82}
+        - {x: -120, y: 67}
+        - {x: -139, y: 53}
+        - {x: -127, y: 16}
+        - {x: -205, y: -24}
+        - {x: -205, y: -53}
+        - {x: -172, y: -114}
+        - {x: -163, y: -122}
+        - {x: -153, y: -121}
+        - {x: -115, y: -102}
+        - {x: -73, y: -84}
+        - {x: -53, y: -123}
+        - {x: -47, y: -129}
+        - {x: -35, y: -129}
+        - {x: -28, y: -127}
+        - {x: 40, y: -92}
+        - {x: 82, y: -85}
+        - {x: 127, y: -101}
+    - name: cubesheet_1
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 398
+        width: 528.2
+        height: 398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 145.26633, y: -96}
+        - {x: 172.26633, y: -21}
+        - {x: 172.26633, y: -1}
+        - {x: 133.26633, y: 27}
+        - {x: 103.26633, y: 30}
+        - {x: 89.26633, y: 125}
+        - {x: 77.26633, y: 134}
+        - {x: 19.266327, y: 155}
+        - {x: -11.733673, y: 155}
+        - {x: -18.733673, y: 152}
+        - {x: -43.733673, y: 121}
+        - {x: -106.73367, y: 88}
+        - {x: -128.73367, y: 60}
+        - {x: -136.73367, y: 38}
+        - {x: -128.73367, y: 14}
+        - {x: -197.73367, y: -18}
+        - {x: -204.73367, y: -28}
+        - {x: -204.73367, y: -54}
+        - {x: -175.73367, y: -118}
+        - {x: -149.73367, y: -129}
+        - {x: -74.73367, y: -85}
+        - {x: -52.733673, y: -129}
+        - {x: -44.733673, y: -131}
+        - {x: -21.733673, y: -131}
+        - {x: 43.266327, y: -93}
+        - {x: 98.26633, y: -95}
+        - {x: 136.26633, y: -105}
+    - name: cubesheet_2
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 398
+        width: 528.2
+        height: 398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 151.53265, y: -100}
+        - {x: 173.53265, y: -20}
+        - {x: 173.53265, y: 3}
+        - {x: 134.53265, y: 28}
+        - {x: 107.53265, y: 26}
+        - {x: 81.53265, y: 82}
+        - {x: 91.53265, y: 114}
+        - {x: 89.53265, y: 127}
+        - {x: 77.53265, y: 134}
+        - {x: 11.532654, y: 155}
+        - {x: -10.467346, y: 155}
+        - {x: -34.467346, y: 125}
+        - {x: -107.46735, y: 87}
+        - {x: -130.46735, y: 52}
+        - {x: -130.46735, y: 39}
+        - {x: -92.46735, y: -38}
+        - {x: -46.467346, y: -131}
+        - {x: -25.467346, y: -131}
+        - {x: 41.532654, y: -96}
+        - {x: 88.53265, y: -90}
+        - {x: 137.53265, y: -105}
+    - name: cubesheet_3
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 398
+        width: 528.2
+        height: 398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 137.29895, y: 31}
+        - {x: 107.29895, y: 27}
+        - {x: 97.29895, y: 132}
+        - {x: 19.29895, y: 155}
+        - {x: -10.70105, y: 155}
+        - {x: -24.70105, y: 132}
+        - {x: -99.70105, y: 93}
+        - {x: -128.70105, y: 56}
+        - {x: -128.70105, y: 37}
+        - {x: -100.70105, y: -40}
+        - {x: -68.70105, y: -48}
+        - {x: -2.7010498, y: -11}
+        - {x: 21.29895, y: -49}
+        - {x: 45.29895, y: -96}
+        - {x: 97.29895, y: -102}
+        - {x: 147.29895, y: -102}
+        - {x: 150.29895, y: -93}
+        - {x: 175.29895, y: -17}
+        - {x: 175.29895, y: -1}
+    - name: cubesheet_4
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 398
+        width: 528.2
+        height: 398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 108.06531, y: 27}
+        - {x: 96.06531, y: 112}
+        - {x: 90.06531, y: 132}
+        - {x: 29.065308, y: 155}
+        - {x: -10.934692, y: 155}
+        - {x: -108.93469, y: 89}
+        - {x: -127.93469, y: 56}
+        - {x: -127.93469, y: 19}
+        - {x: -101.93469, y: -32}
+        - {x: -72.93469, y: -50}
+        - {x: 6.0653076, y: -28}
+        - {x: 28.065308, y: -35}
+        - {x: 49.065308, y: -76}
+        - {x: 116.06531, y: -102}
+        - {x: 142.0653, y: -102}
+        - {x: 152.0653, y: -98}
+        - {x: 176.0653, y: -29}
+        - {x: 176.0653, y: -6}
+        - {x: 171.0653, y: 4}
+    - name: cubesheet_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 528.2
+        height: 398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 102, y: 24.5}
+        - {x: 93, y: 136.5}
+        - {x: 28, y: 149.5}
+        - {x: -12, y: 149.5}
+        - {x: -21, y: 145.5}
+        - {x: -110, y: 85.5}
+        - {x: -110, y: 56.5}
+        - {x: -66, y: -22.5}
+        - {x: 13, y: -42.5}
+        - {x: 44, y: -85.5}
+        - {x: 115, y: -108.5}
+        - {x: 135, y: -108.5}
+        - {x: 145, y: -104.5}
+        - {x: 170, y: -40.5}
+        - {x: 170, y: -10.5}
+        - {x: 164, y: 1.5}
+    - name: cubesheet_6
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 0
+        width: 528.2
+        height: 398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 53.266327, y: 149.5}
+        - {x: -36.733673, y: 149.5}
+        - {x: -102.73367, y: 89.5}
+        - {x: -107.73367, y: 80.5}
+        - {x: -107.73367, y: 49.5}
+        - {x: -63.733673, y: -23.5}
+        - {x: -16.733673, y: -36.5}
+        - {x: 34.266327, y: -36.5}
+        - {x: 105.26633, y: -5.5}
+        - {x: 105.26633, y: 24.5}
+        - {x: 89.26633, y: 75.5}
+        - {x: 93.26633, y: 118.5}
+        - {x: 87.26633, y: 147.5}
+    - name: cubesheet_7
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 0
+        width: 528.2
+        height: 398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 20.532654, y: 144.5}
+        - {x: -14.467346, y: 144.5}
+        - {x: -19.467346, y: 142.5}
+        - {x: -37.467346, y: 70.5}
+        - {x: -37.467346, y: 32.5}
+        - {x: 10.532654, y: -41.5}
+        - {x: 30.532654, y: -41.5}
+        - {x: 107.53265, y: -7.5}
+        - {x: 108.53265, y: -4.5}
+        - {x: 108.53265, y: 35.5}
+        - {x: 91.53265, y: 116.5}
+    - name: cubesheet_8
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 0
+        width: 528.2
+        height: 398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 87.29895, y: 99.5}
+        - {x: 37.29895, y: 99.5}
+        - {x: -26.70105, y: 82.5}
+        - {x: -26.70105, y: 35.5}
+        - {x: 1.2989502, y: -37.5}
+        - {x: 35.29895, y: -37.5}
+        - {x: 105.29895, y: -4.5}
+        - {x: 110.29895, y: 6.5}
+        - {x: 110.29895, y: 35.5}
+    - name: cubesheet_9
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 0
+        width: 528.2
+        height: 398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -24.934692, y: 80.5}
+        - {x: -26.934692, y: 79.5}
+        - {x: -26.934692, y: 19.5}
+        - {x: -8.934692, y: -40.5}
+        - {x: 49.065308, y: -40.5}
+        - {x: 110.06531, y: 0.5}
+        - {x: 110.06531, y: 32.5}
+        - {x: 94.06531, y: 80.5}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

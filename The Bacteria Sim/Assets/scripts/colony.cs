@@ -23,7 +23,11 @@ public class colony : MonoBehaviour {
 	public float damageTakenByParticles = 0.5f;
 	public int money = 2;
 	public int bonusForGroup;
+	public int chanceToMutate;
+	private bool hasMutated;
+
 	GameObject gameManager;
+	GameObject userInterface;
 	GameObject center;
 	GameObject waveSpawner;
     List<Color> colors;
@@ -34,8 +38,39 @@ public class colony : MonoBehaviour {
 		speed += (speedPerLevel * level);
 		if(speed > maxSpeed) speed = maxSpeed;
 		if(lifePoints > maxHP) transform.localScale = minScale + new Vector3(maxHP/100,maxHP/100,1);
-		else transform.localScale = minScale + new Vector3(lifePoints/100,lifePoints/100,1);
+		else transform.localScale = minScale + new Vector3(lifePoints/100,lifePoints/100,1);		
 		int waveNumber = waveSpawner.GetComponent<waveSpawner>().waveNumber;
+		mutate(waveNumber);
+	}
+	
+	public void setVariables(GameObject gm, GameObject c, GameObject ws, GameObject ui, List<Color> cols){
+		gameManager = gm;
+		center = c;
+		waveSpawner = ws;
+		userInterface = ui;
+		colors = cols;
+	}
+	// Update is called once per frame
+	void Update () {
+		if (lifePoints < startingLifePoints/5 && !hasMutated){
+			int m = Random.Range(0, chanceToMutate);
+			print("m " + m + " and " + chanceToMutate);
+			if (m > chanceToMutate - 1){
+				print("here");
+				int waveNumber = waveSpawner.GetComponent<waveSpawner>().waveNumber;
+				mutate(waveNumber-1);
+				hasMutated = true;
+			} 
+		}
+		if (lifePoints <= 0.5 || transform.localScale.x < minScale.x){
+			waveSpawner.GetComponent<waveSpawner>().destroy(gameObject, true);
+			userInterface.GetComponent<UserInterface>().showMoney(money, transform.position);
+		}
+		objLookAt(gameObject, center.transform.position);
+		transform.Translate(Vector2.right * Time.deltaTime * speed);
+	}
+
+	void mutate(int waveNumber){
 		int i;
 		if(waveNumber > 10){
 			i = Random.Range(0, 4);
@@ -51,20 +86,8 @@ public class colony : MonoBehaviour {
 			if(j == i) resistances[j] = true;
 			else resistances[j] = false;
 		}
+		//print("mutated");
 		GetComponent<SpriteRenderer>().color = colors[i];
-	}
-	
-	public void setVariables(GameObject gm, GameObject c, GameObject ws, List<Color> cols){
-		gameManager = gm;
-		center = c;
-		waveSpawner = ws;
-		colors = cols;
-	}
-	// Update is called once per frame
-	void Update () {
-		if (lifePoints <= 0.5 || transform.localScale.x < minScale.x) waveSpawner.GetComponent<waveSpawner>().destroy(gameObject, true);
-		objLookAt(gameObject, center.transform.position);
-		transform.Translate(Vector2.right * Time.deltaTime * speed);
 	}
 
     void objLookAt(GameObject g, Vector3 pos){

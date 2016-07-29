@@ -48,6 +48,6 @@ public class ModifyTurret : MonoBehaviour {
         pos.x = pos.x - g.transform.position.x;
         pos.y = pos.y - g.transform.position.y;
         float angle = (int) (Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg);
-        g.transform.rotation  = Quaternion.Slerp(g.transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle)),1);
+        g.transform.rotation  = Quaternion.Slerp(g.transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle-90)),1);
     }
 }
