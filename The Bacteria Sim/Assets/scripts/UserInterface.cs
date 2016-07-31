@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class UserInterface : MonoBehaviour {
 
-	    //UI, Given more time I should probably export the ui to another script
 	public GameObject gameManager;
 	public GameObject waveSpawner;
     public GameObject canvas;
@@ -57,8 +56,8 @@ public class UserInterface : MonoBehaviour {
 
 	public void changeColor(int i){
         if(waveNumber < 2 && i > 0) return;
-        else if(waveNumber < 3 && i > 1) return;
-        else if(waveNumber < 7 && i > 2) return;
+        else if(waveNumber < 7 && i > 1) return;
+        else if(waveNumber < 11 && i > 2) return;
         if (gameManager.GetComponent<gameManager>().currentColor == i) return;
         soundManager.PlayOneShot(sounds[0]);
         gameManager.GetComponent<gameManager>().currentColor = i;

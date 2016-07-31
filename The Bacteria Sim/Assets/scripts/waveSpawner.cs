@@ -128,7 +128,6 @@ public class waveSpawner : MonoBehaviour {
 				GameObject gO = (GameObject)Instantiate(bosses[currentBoss], new Vector2 (randPos.x+(j*0.1f), randPos.y+(j*0.1f)), Quaternion.identity);
 		        gO.GetComponent<colony>().setVariables(gameManager, center, gameObject, userInterface, colors);
 				gO.GetComponent<colony>().startingStats(ennemyLevel);
-				print("called");
 				userInterface.GetComponent<UserInterface>().showWarning(gO, true);
 			}
 			currentBoss++;
@@ -181,19 +180,27 @@ public class waveSpawner : MonoBehaviour {
     	if (killedByPlayer){
     		soundManager.PlayOneShot(sounds[0]);
     		gameManager.GetComponent<gameManager>().money += g.GetComponent<colony>().money;
-    		if(createdPool[g.tag].Count <= 1){
-    			soundManager.PlayOneShot(sounds[2]);
-    			gameManager.GetComponent<gameManager>().money += bonusMoney[g.tag];
-    		} 
-    	}
+    		if(createdPool.ContainsKey(g.tag)){
+    			if(createdPool[g.tag].Count <= 1){
+	    			soundManager.PlayOneShot(sounds[2]);
+	    			gameManager.GetComponent<gameManager>().money += bonusMoney[g.tag];
+    			} 
+    		}
+     	}
     	else {
-    		bonusMoney[g.tag] = 0;
+    		if(createdPool.ContainsKey(g.tag))
+    			bonusMoney[g.tag] = 0;
     	}
         MonoBehaviour[] scripts = g.GetComponents<MonoBehaviour>();
         foreach (MonoBehaviour script in scripts) script.enabled = false;
     	g.SetActive(false);
-    	objectPool[g.tag].Add(createdPool[g.tag][0]);
-    	createdPool[g.tag].RemoveAt(0);
+    	if(objectPool.ContainsKey(g.tag)){
+    		objectPool[g.tag].Add(createdPool[g.tag][0]);
+    	}
+    	else Destroy(g);
+    	if(createdPool.ContainsKey(g.tag)){
+    		createdPool[g.tag].RemoveAt(0);
+    	}
     	waveCount--;
     }
 }

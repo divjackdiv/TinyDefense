@@ -62,6 +62,7 @@ public class gameManager : MonoBehaviour {
         wasHoldingDown = false;
         defaultNullPos = new Vector2(-1,-1);
         oldPos = defaultNullPos;
+        money = startMoney;
         
     }
     public void restartGame(){

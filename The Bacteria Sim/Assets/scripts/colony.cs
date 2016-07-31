@@ -60,7 +60,7 @@ public class colony : MonoBehaviour {
 				hasMutated = true;
 			} 
 		}
-		if (lifePoints <= 0.5 || transform.localScale.x < minScale.x){
+		if (lifePoints <= 0.5 || transform.localScale.x < minScale.x || transform.localScale.y < minScale.y){
 			waveSpawner.GetComponent<waveSpawner>().destroy(gameObject, true);
 			userInterface.GetComponent<UserInterface>().showMoney(money, transform.position);
 		}

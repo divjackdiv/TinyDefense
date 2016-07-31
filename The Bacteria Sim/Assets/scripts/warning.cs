@@ -8,7 +8,11 @@ public class warning : MonoBehaviour {
     public GameObject target;
 	void Update () {
         if(target == null) Destroy(gameObject);
-        position(target);
+        if(!target.activeSelf) gameObject.SetActive(false);
+        else{
+            gameObject.SetActive(true);
+            position(target);
+        }
 	}
    
 
